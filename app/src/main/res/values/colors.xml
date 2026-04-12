@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Decorative Bluish Theme -->
+    <color name="bg_blue_light">#E3F2FD</color>
+    <color name="bg_blue_medium">#BBDEFB</color>
+    <color name="primary_blue">#1976D2</color>
+    <color name="dark_blue">#0D47A1</color>
+
+    <!-- Role Colors -->
+    <color name="role_student">#1E88E5</color>
+    <color name="role_admin">#D32F2F</color>
+    <color name="role_staff">#43A047</color>
+    <color name="role_warden">#8E24AA</color>
+
+    <!-- Text Colors -->
+    <color name="text_title">#0D47A1</color>
+    <color name="text_desc">#546E7A</color>
+</resources>
