@@ -14,13 +14,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.*;
+
+import java.util.HashMap;
 
 public class UserLoginActivity extends AppCompatActivity {
 
     private TextInputEditText emailEditText, passwordEditText;
-    private MaterialButton authenticateButton;
+    private MaterialButton loginButton;
     private TextView forgotPassword;
     private LinearLayout btnBackToRoles;
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,45 +40,60 @@ public class UserLoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        mAuth = FirebaseAuth.getInstance();
+
         // Initialize views
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        authenticateButton = findViewById(R.id.authenticateButton);
+        loginButton = findViewById(R.id.loginButton);
         forgotPassword = findViewById(R.id.forgotPassword);
         btnBackToRoles = findViewById(R.id.btnBackToRoles);
 
         // Back to Roles Click
         if (btnBackToRoles != null) {
-            btnBackToRoles.setOnClickListener(v -> {
-                finish(); // Returns to MainActivity (Role Selection)
+            btnBackToRoles.setOnClickListener(v -> finish());
+        }
+
+        // Login Button Click
+        if (loginButton != null) {
+            loginButton.setOnClickListener(v -> {
+                String email = emailEditText.getText().toString().trim();
+                String password = passwordEditText.getText().toString().trim();
+
+                if (email.isEmpty()) {
+                    emailEditText.setError("Email is required");
+                    return;
+                }
+                
+                if (!email.endsWith("@bmu.edu.in")) {
+                    Toast.makeText(this, "Use college email only", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (password.isEmpty()) {
+                    passwordEditText.setError("Password is required");
+                    return;
+                }
+
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(this, "User Login Successful!", Toast.LENGTH_SHORT).show();
+                                // TODO: intent = new Intent(UserLoginActivity.this, UserDashboardActivity.class);
+                                // startActivity(intent);
+                                // finish();
+                            } else {
+                                Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             });
         }
 
-        // Authenticate Button Click
-        authenticateButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
-
-            if (email.isEmpty()) {
-                emailEditText.setError("Email is required");
-                return;
-            }
-            if (password.isEmpty()) {
-                passwordEditText.setError("Password is required");
-                return;
-            }
-
-            // Simple validation for demo
-            if (email.equals("admin@carecrew.com") && password.equals("admin123")) {
-                Toast.makeText(this, "Authentication Successful!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         // Forgot Password Click
-        forgotPassword.setOnClickListener(v -> {
-            Toast.makeText(this, "Forgot Password Clicked", Toast.LENGTH_SHORT).show();
-        });
+        if (forgotPassword != null) {
+            forgotPassword.setOnClickListener(v -> {
+                Toast.makeText(this, "Forgot Password Clicked", Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 }

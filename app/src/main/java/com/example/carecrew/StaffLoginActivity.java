@@ -1,6 +1,7 @@
 package com.example.carecrew;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -12,12 +13,18 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.*;
+
+import java.util.HashMap;
 
 public class StaffLoginActivity extends AppCompatActivity {
 
     private TextInputEditText emailEditText, passwordEditText;
-    private MaterialButton authenticateButton;
+    private MaterialButton loginButton;
     private LinearLayout btnBackToRoles;
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +38,12 @@ public class StaffLoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        mAuth = FirebaseAuth.getInstance();
+
         // Initialize views
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        authenticateButton = findViewById(R.id.authenticateButton);
+        loginButton = findViewById(R.id.loginButton);
         btnBackToRoles = findViewById(R.id.btnBackToRoles);
 
         // Back to Roles Click
@@ -42,9 +51,9 @@ public class StaffLoginActivity extends AppCompatActivity {
             btnBackToRoles.setOnClickListener(v -> finish());
         }
 
-        // Authenticate Button Click
-        if (authenticateButton != null) {
-            authenticateButton.setOnClickListener(v -> {
+        // Login Button Click
+        if (loginButton != null) {
+            loginButton.setOnClickListener(v -> {
                 String email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
 
@@ -52,17 +61,28 @@ public class StaffLoginActivity extends AppCompatActivity {
                     emailEditText.setError("Email is required");
                     return;
                 }
+
+                if (!email.endsWith("@bmu.edu.in")) {
+                    Toast.makeText(this, "Use college email only", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (password.isEmpty()) {
                     passwordEditText.setError("Password is required");
                     return;
                 }
 
-                // Placeholder authentication
-                if (email.equals("staff@carecrew.com") && password.equals("staff123")) {
-                    Toast.makeText(this, "Staff Authenticated!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-                }
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(this, "Staff Login Successful!", Toast.LENGTH_SHORT).show();
+                                // TODO: Navigate to StaffDashboardActivity
+                                // startActivity(new Intent(StaffLoginActivity.this, StaffDashboardActivity.class));
+                                // finish();
+                            } else {
+                                Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             });
         }
     }

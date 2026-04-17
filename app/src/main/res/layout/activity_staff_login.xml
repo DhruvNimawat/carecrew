@@ -44,15 +44,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:src="@android:drawable/ic_menu_revert"
             app:tint="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:text="Back to Roles"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -160,17 +160,18 @@
                 android:textColor="@color/primary_blue"
                 android:textStyle="bold" />
 
-            <!-- Authenticate Button -->
+            <!-- Login Button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/authenticateButton"
+                android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="24dp"
-                android:text="Authenticate"
+                android:text="Login"
                 android:textAllCaps="false"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:cornerRadius="12dp" />
+
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
