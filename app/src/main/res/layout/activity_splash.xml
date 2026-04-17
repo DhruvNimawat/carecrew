@@ -11,6 +11,7 @@
         android:id="@+id/waveBack"
         android:layout_width="match_parent"
         android:layout_height="400dp"
+        android:layout_marginBottom="40dp"
         android:alpha="0.3"
         android:scaleType="fitXY"
         android:src="@drawable/wave_1"
@@ -20,6 +21,7 @@
         android:id="@+id/waveMid"
         android:layout_width="match_parent"
         android:layout_height="250dp"
+        android:layout_marginBottom="30dp"
         android:alpha="0.5"
         android:scaleType="fitXY"
         android:src="@drawable/wave_2"
@@ -33,26 +35,15 @@
         android:src="@drawable/wave_3"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Logo at the Top -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/logoCard"
+    <!-- Logo placeholder (actual logo is shared and floats) -->
+    <View
+        android:id="@+id/logoPlaceholder"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="80dp"
-        app:cardCornerRadius="60dp"
-        app:cardElevation="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/logoImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="20dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/img" />
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Content Center -->
     <LinearLayout
@@ -61,7 +52,7 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/waveMid"
-        app:layout_constraintTop_toBottomOf="@+id/logoCard"
+        app:layout_constraintTop_toBottomOf="@+id/logoPlaceholder"
         app:layout_constraintVertical_bias="0.4">
 
         <TextView
@@ -102,11 +93,13 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="92dp"
         android:indeterminate="true"
-        android:progressTint="#FFFFFF"
+        android:indeterminateTint="#000000"
+        android:progressTint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,86 +1,176 @@
 package com.example.carecrew;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int SPLASH_TIME = 3000; // 3 seconds
+    private FrameLayout contentFrame;
+    private CardView sharedLogoCard;
+    private ObjectAnimator rotationAnimator;
+    private final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        
-        // Show Splash Screen first
+        setContentView(R.layout.activity_main);
+
+        contentFrame = findViewById(R.id.contentFrame);
+        sharedLogoCard = findViewById(R.id.sharedLogoCard);
+
         showSplashScreen();
     }
 
     private void showSplashScreen() {
-        setContentView(R.layout.activity_splash);
-        
-        // Apply window insets to the root view
-        applyWindowInsets(findViewById(android.R.id.content));
+        View splashView = LayoutInflater.from(this).inflate(R.layout.activity_splash, contentFrame, false);
+        contentFrame.removeAllViews();
+        contentFrame.addView(splashView);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showRoleSelection();
-            }
-        }, SPLASH_TIME);
+        // UI elements for splash animation
+        View appName = splashView.findViewById(R.id.appName);
+        View tagline = splashView.findViewById(R.id.tagline);
+        View logoPlaceholder = splashView.findViewById(R.id.logoPlaceholder);
+
+        // Load animations
+        Animation topDown = AnimationUtils.loadAnimation(this, R.anim.top_down);
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+
+        // Positioning and rotating the shared logo
+        handler.postDelayed(() -> {
+            int[] location = new int[2];
+            logoPlaceholder.getLocationOnScreen(location);
+            sharedLogoCard.setX(location[0]);
+            sharedLogoCard.setY(location[1]);
+            sharedLogoCard.setVisibility(View.VISIBLE);
+
+            // Infinite rotation using ObjectAnimator
+            rotationAnimator = ObjectAnimator.ofFloat(sharedLogoCard, "rotation", 0f, 360f);
+            rotationAnimator.setDuration(2000);
+            rotationAnimator.setInterpolator(new LinearInterpolator());
+            rotationAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            rotationAnimator.start();
+        }, 100);
+
+        appName.startAnimation(topDown);
+        tagline.startAnimation(fadeIn);
+
+        // Transition to Role Selection after 3 seconds
+        handler.postDelayed(this::showRoleSelection, 3000);
     }
 
     private void showRoleSelection() {
-        setContentView(R.layout.activity_role_selection);
+        View roleView = LayoutInflater.from(this).inflate(R.layout.activity_role_selection, contentFrame, false);
         
-        // Apply window insets to the new root view
-        applyWindowInsets(findViewById(android.R.id.content));
+        // Preparation: Find target position in the new layout
+        View logoPlaceholder = roleView.findViewById(R.id.logoPlaceholder);
+        View headerTextSection = roleView.findViewById(R.id.headerTextSection);
+        View topHeaderBg = roleView.findViewById(R.id.topHeaderBg);
+        View headerCurve = roleView.findViewById(R.id.headerCurve);
 
-        // Initialize Role Selection Cards
-        CardView cardStudent = findViewById(R.id.cardStudent);
-        CardView cardAdmin = findViewById(R.id.cardAdmin);
-        CardView cardStaff = findViewById(R.id.cardStaff);
-        CardView cardWarden = findViewById(R.id.cardWarden);
+        // Clear and add new view
+        contentFrame.removeAllViews();
+        contentFrame.addView(roleView);
 
-        if (cardStudent != null) {
-            cardStudent.setOnClickListener(v -> onRoleSelected("Student"));
+        // Stop rotation and animate shared logo to new position
+        if (rotationAnimator != null) {
+            rotationAnimator.cancel();
+            sharedLogoCard.setRotation(0f); // Reset to fixed position
         }
-        if (cardAdmin != null) {
-            cardAdmin.setOnClickListener(v -> onRoleSelected("Admin"));
+
+        handler.post(() -> {
+            int[] targetLocation = new int[2];
+            logoPlaceholder.getLocationOnScreen(targetLocation);
+
+            sharedLogoCard.animate()
+                    .x(targetLocation[0])
+                    .y(targetLocation[1])
+                    .scaleX(0.83f) // 100dp / 120dp approx
+                    .scaleY(0.83f)
+                    .setDuration(1000)
+                    .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
+                    .start();
+        });
+
+        // Animate other elements
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation topDown = AnimationUtils.loadAnimation(this, R.anim.top_down);
+        Animation popIn = AnimationUtils.loadAnimation(this, R.anim.pop_in);
+
+        topHeaderBg.startAnimation(topDown);
+        headerCurve.startAnimation(topDown);
+        headerTextSection.startAnimation(fadeIn);
+
+        // Staggered animation for cards
+        CardView cardStudent = roleView.findViewById(R.id.cardStudent);
+        CardView cardAdmin = roleView.findViewById(R.id.cardAdmin);
+        CardView cardStaff = roleView.findViewById(R.id.cardStaff);
+        CardView cardWarden = roleView.findViewById(R.id.cardWarden);
+
+        View[] cards = {cardStudent, cardAdmin, cardStaff, cardWarden};
+        for (int i = 0; i < cards.length; i++) {
+            final View card = cards[i];
+            card.setVisibility(View.INVISIBLE);
+            handler.postDelayed(() -> {
+                card.setVisibility(View.VISIBLE);
+                card.startAnimation(popIn);
+            }, 600 + (i * 150));
         }
-        if (cardStaff != null) {
-            cardStaff.setOnClickListener(v -> onRoleSelected("Staff"));
-        }
-        if (cardWarden != null) {
-            cardWarden.setOnClickListener(v -> onRoleSelected("Warden"));
-        }
+
+        setupClickListeners(roleView);
     }
 
-    private void applyWindowInsets(View view) {
-        if (view != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                return insets;
-            });
-        }
+    private void setupClickListeners(View view) {
+        view.findViewById(R.id.cardStudent).setOnClickListener(v -> onRoleSelected("Student"));
+        view.findViewById(R.id.cardAdmin).setOnClickListener(v -> onRoleSelected("Admin"));
+        view.findViewById(R.id.cardStaff).setOnClickListener(v -> onRoleSelected("Staff"));
+        view.findViewById(R.id.cardWarden).setOnClickListener(v -> onRoleSelected("Warden"));
     }
 
     private void onRoleSelected(String role) {
-        Toast.makeText(this, "Welcome " + role, Toast.LENGTH_SHORT).show();
-        // Navigate to UserLoginActivity
-        Intent intent = new Intent(MainActivity.this, UserLoginActivity.class);
-        intent.putExtra("ROLE", role);
-        startActivity(intent);
+        View card = null;
+        Class<?> targetActivity = null;
+        switch (role) {
+            case "Student":
+                card = findViewById(R.id.cardStudent);
+                targetActivity = UserLoginActivity.class;
+                break;
+            case "Admin":
+                card = findViewById(R.id.cardAdmin);
+                targetActivity = AdminLoginActivity.class;
+                break;
+            case "Staff":
+                card = findViewById(R.id.cardStaff);
+                targetActivity = StaffLoginActivity.class;
+                break;
+            case "Warden":
+                card = findViewById(R.id.cardWarden);
+                targetActivity = WardenLoginActivity.class;
+                break;
+        }
+
+        if (card != null) {
+            Animation clickShrink = AnimationUtils.loadAnimation(this, R.anim.click_shrink);
+            card.startAnimation(clickShrink);
+        }
+
+        if (targetActivity != null) {
+            final Class<?> finalTarget = targetActivity;
+            handler.postDelayed(() -> {
+                Intent intent = new Intent(MainActivity.this, finalTarget);
+                intent.putExtra("ROLE", role);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }, 200);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.carecrew;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -16,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 public class WardenLoginActivity extends AppCompatActivity {
 
     private TextInputEditText emailEditText, passwordEditText;
-    private MaterialButton authenticateButton;
+    private MaterialButton loginButton;
     private LinearLayout btnBackToRoles;
 
     @Override
@@ -34,7 +35,7 @@ public class WardenLoginActivity extends AppCompatActivity {
         // Initialize views
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        authenticateButton = findViewById(R.id.authenticateButton);
+        loginButton = findViewById(R.id.loginButton);
         btnBackToRoles = findViewById(R.id.btnBackToRoles);
 
         // Back to Roles Click
@@ -42,9 +43,9 @@ public class WardenLoginActivity extends AppCompatActivity {
             btnBackToRoles.setOnClickListener(v -> finish());
         }
 
-        // Authenticate Button Click
-        if (authenticateButton != null) {
-            authenticateButton.setOnClickListener(v -> {
+        // Login Button Click
+        if (loginButton != null) {
+            loginButton.setOnClickListener(v -> {
                 String email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
 
@@ -57,9 +58,12 @@ public class WardenLoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Placeholder authentication
-                if (email.equals("warden@carecrew.com") && password.equals("warden123")) {
-                    Toast.makeText(this, "Warden Authenticated!", Toast.LENGTH_SHORT).show();
+                // Simple login for demonstration (You can add Firebase Auth here)
+                if (email.endsWith("@bmu.edu.in") && !password.isEmpty()) {
+                    Toast.makeText(this, "Warden Login Successful!", Toast.LENGTH_SHORT).show();
+                    // TODO: Navigate to WardenDashboardActivity
+                    // startActivity(new Intent(WardenLoginActivity.this, WardenDashboardActivity.class));
+                    // finish();
                 } else {
                     Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
                 }
