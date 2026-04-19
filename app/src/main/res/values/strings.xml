@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">CareCrew</string>
+    <string name="review_location_format">Block %1$s, Floor %2$s, Room %3$s</string>
+    <string name="ticket_room_format">Room: %1$s</string>
+    <string name="ticket_assigned_format">Assigned to: %1$s</string>
 </resources>

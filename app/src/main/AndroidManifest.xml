@@ -8,8 +8,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CareCrew">
+
         <activity
-            android:name=".UserDashboard"
+            android:name=".UserDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RaiseComplaintActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UploadImageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocationSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ComplaintReviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MyTicketsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".WardenDashboard"
@@ -31,13 +50,12 @@
             android:exported="false" />
         <activity
             android:name=".UserLoginActivity"
-            android:exported="false" /> <!-- Main Activity now handles Splash and Role Selection -->
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
