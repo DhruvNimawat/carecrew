@@ -1,5 +1,6 @@
 package com.example.carecrew;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -79,9 +80,9 @@ public class UserLoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 Toast.makeText(this, "User Login Successful!", Toast.LENGTH_SHORT).show();
-                                // TODO: intent = new Intent(UserLoginActivity.this, UserDashboardActivity.class);
-                                // startActivity(intent);
-                                // finish();
+                                Intent intent = new Intent(UserLoginActivity.this, UserDashboardActivity.class);
+                                startActivity(intent);
+                                finish();
                             } else {
                                 Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
                             }
