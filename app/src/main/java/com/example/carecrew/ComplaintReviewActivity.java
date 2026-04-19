@@ -35,10 +35,27 @@ public class ComplaintReviewActivity extends AppCompatActivity {
         imageUrl = getIntent().getStringExtra("imageUrl");
 
         // Set Review Text
-        ((TextView) findViewById(R.id.reviewCategory)).setText(category);
-        ((TextView) findViewById(R.id.reviewDescription)).setText(description);
-        ((TextView) findViewById(R.id.reviewLocation)).setText(block + ", " + floor + ", " + roomNumber);
-        ((TextView) findViewById(R.id.reviewPriority)).setText(priority);
+        ((TextView) findViewById(R.id.reviewCategory)).setText(category != null ? category : "N/A");
+        ((TextView) findViewById(R.id.reviewDescription)).setText(description != null ? description : "No description provided");
+        
+        String location = "";
+        if (block != null && !block.isEmpty()) location += block;
+        if (floor != null && !floor.isEmpty()) location += (location.isEmpty() ? "" : ", ") + floor;
+        if (roomNumber != null && !roomNumber.isEmpty()) location += (location.isEmpty() ? "" : ", ") + "Room " + roomNumber;
+        ((TextView) findViewById(R.id.reviewLocation)).setText(location.isEmpty() ? "No location specified" : location);
+        
+        ((TextView) findViewById(R.id.reviewPriority)).setText(priority != null ? priority : "Normal");
+
+        // Handle Image Preview
+        android.widget.ImageView ivReviewImage = findViewById(R.id.ivReviewImage);
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            // If you have Glide or Picasso, use them here. 
+            // For now, we just ensure the view is visible or has a placeholder.
+            ivReviewImage.setAlpha(1.0f);
+            ivReviewImage.setPadding(0, 0, 0, 0);
+            ivReviewImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+            // Note: In a real app, use Glide.with(this).load(imageUrl).into(ivReviewImage);
+        }
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.btnEdit).setOnClickListener(v -> finish());
@@ -51,7 +68,7 @@ public class ComplaintReviewActivity extends AppCompatActivity {
     private void submitComplaint() {
         String complaintId = mDatabase.child("complaints").push().getKey();
         String userId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "anonymous";
-        String timestamp = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(new Date());
+        long timestamp = System.currentTimeMillis();
 
         Complaint complaint = new Complaint(
                 complaintId,
@@ -64,7 +81,7 @@ public class ComplaintReviewActivity extends AppCompatActivity {
                 priority,
                 "Pending",
                 imageUrl,
-                timestamp
+                String.valueOf(timestamp)
         );
 
         if (complaintId != null) {

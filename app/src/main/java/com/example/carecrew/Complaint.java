@@ -12,6 +12,7 @@ public class Complaint {
     public String status;
     public String imageUrl;
     public String timestamp;
+    public String assignedTo;
 
     public Complaint() {
         // Required for Firebase
@@ -29,5 +30,25 @@ public class Complaint {
         this.status = status;
         this.imageUrl = imageUrl;
         this.timestamp = timestamp;
+    }
+
+    public Complaint(String id, String userId, String category, String description, String block, String floor, String roomNumber, String priority, String status, String imageUrl, String timestamp, String assignedTo) {
+        this(id, userId, category, description, block, floor, roomNumber, priority, status, imageUrl, timestamp);
+        this.assignedTo = assignedTo;
+    }
+
+    public long getTimestampLong() {
+        if (timestamp == null || timestamp.isEmpty()) return 0;
+        try {
+            return Long.parseLong(timestamp);
+        } catch (NumberFormatException e) {
+            try {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault());
+                java.util.Date date = sdf.parse(timestamp);
+                return date != null ? date.getTime() : 0;
+            } catch (Exception ex) {
+                return 0;
+            }
+        }
     }
 }

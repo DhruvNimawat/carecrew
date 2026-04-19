@@ -16,7 +16,9 @@ import com.google.firebase.database.ValueEventListener;
 public class UserDashboardActivity extends AppCompatActivity {
 
     private TextView totalTicketsText, tvPendingCount, tvInProgressCount, tvUrgentCount;
+    private TextView tvAnnouncementTitle, tvAnnouncementMessage;
     private DatabaseReference mDatabase;
+    private DatabaseReference mAnnouncementsRef;
     private FirebaseAuth mAuth;
 
     @Override
@@ -26,11 +28,20 @@ public class UserDashboardActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("complaints");
+        mAnnouncementsRef = FirebaseDatabase.getInstance().getReference().child("Announcements");
 
         totalTicketsText = findViewById(R.id.userLocation);
         tvPendingCount = findViewById(R.id.tvPendingCount);
         tvInProgressCount = findViewById(R.id.tvInProgressCount);
         tvUrgentCount = findViewById(R.id.tvUrgentCount);
+        
+        tvAnnouncementTitle = findViewById(R.id.tvAnnouncementTitle);
+        tvAnnouncementMessage = findViewById(R.id.tvAnnouncementMessage);
+
+        // Fix for Potential Crashes: Check if views are null
+        if (tvAnnouncementTitle == null || tvAnnouncementMessage == null) {
+            // Log or handle the error
+        }
 
         CardView cardRaiseComplaint = findViewById(R.id.cardRaiseComplaint);
         CardView cardMyTickets = findViewById(R.id.cardMyTickets);
@@ -38,36 +49,75 @@ public class UserDashboardActivity extends AppCompatActivity {
         CardView cardProfile = findViewById(R.id.cardProfile);
 
         updateStats();
+        listenForAnnouncements();
 
-        cardRaiseComplaint.setOnClickListener(v -> 
-            startActivity(new Intent(UserDashboardActivity.this, RaiseComplaintActivity.class))
-        );
+        if (cardRaiseComplaint != null) {
+            cardRaiseComplaint.setOnClickListener(v -> 
+                startActivity(new Intent(UserDashboardActivity.this, RaiseComplaintActivity.class))
+            );
+        }
 
-        cardMyTickets.setOnClickListener(v -> 
-            startActivity(new Intent(UserDashboardActivity.this, MyTicketsActivity.class))
-        );
+        if (cardMyTickets != null) {
+            cardMyTickets.setOnClickListener(v -> 
+                startActivity(new Intent(UserDashboardActivity.this, MyTicketsActivity.class))
+            );
+        }
 
-        cardUpdates.setOnClickListener(v -> 
-            android.widget.Toast.makeText(this, "Recent Updates coming soon!", android.widget.Toast.LENGTH_SHORT).show()
-        );
+        if (cardUpdates != null) {
+            cardUpdates.setOnClickListener(v -> 
+                android.widget.Toast.makeText(this, "Recent Updates coming soon!", android.widget.Toast.LENGTH_SHORT).show()
+            );
+        }
 
-        cardProfile.setOnClickListener(v -> 
-            startActivity(new Intent(UserDashboardActivity.this, ProfileDetailsActivity.class))
-        );
+        if (cardProfile != null) {
+            cardProfile.setOnClickListener(v -> 
+                startActivity(new Intent(UserDashboardActivity.this, ProfileDetailsActivity.class))
+            );
+        }
 
-        findViewById(R.id.btnLogout).setOnClickListener(v -> {
-            mAuth.signOut();
-            Intent intent = new Intent(UserDashboardActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+        android.view.View btnLogout = findViewById(R.id.btnLogout);
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> {
+                mAuth.signOut();
+                Intent intent = new Intent(UserDashboardActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            });
+        }
+    }
+
+    private void listenForAnnouncements() {
+        mAnnouncementsRef.limitToLast(1).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        try {
+                            Announcement announcement = postSnapshot.getValue(Announcement.class);
+                            if (announcement != null) {
+                                tvAnnouncementTitle.setText(announcement.getTitle());
+                                tvAnnouncementMessage.setText(announcement.getMessage());
+                            }
+                        } catch (Exception e) {
+                            // Skip if data is in old format
+                        }
+                    }
+                } else {
+                    tvAnnouncementTitle.setText("No Announcements");
+                    tvAnnouncementMessage.setText("Check back later for updates.");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
-
-        // Add listeners for Profile and Updates as needed
     }
 
     private void updateStats() {
-        String userId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "anonymous";
+        if (mAuth.getCurrentUser() == null) return;
+        String userId = mAuth.getCurrentUser().getUid();
+        
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

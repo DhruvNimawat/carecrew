@@ -21,7 +21,7 @@ public class AdminDashboard extends AppCompatActivity {
 
     private TextView tvTotalUsers, tvOpenTickets, tvActiveStaff, tvSystemAlerts, tvAdminGreeting;
     private ImageButton btnLogout;
-    private View actionAddStaff, actionTicketsCenter, actionStaffReviews, actionSystemLogs;
+    private View actionAddStaff, actionTicketsCenter, actionStaffReviews, actionAnnouncements;
     private View navHome, navRaise, navComplaints, navProfile;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -46,7 +46,7 @@ public class AdminDashboard extends AppCompatActivity {
         actionAddStaff = findViewById(R.id.actionAddStaff);
         actionTicketsCenter = findViewById(R.id.actionTicketsCenter);
         actionStaffReviews = findViewById(R.id.actionStaffReviews);
-        actionSystemLogs = findViewById(R.id.actionSystemLogs);
+        actionAnnouncements = findViewById(R.id.actionAnnouncements);
 
         // Initialize Nav
         navHome = findViewById(R.id.navHome);
@@ -98,8 +98,8 @@ public class AdminDashboard extends AppCompatActivity {
             startActivity(new Intent(AdminDashboard.this, StaffReviewsActivity.class));
         });
 
-        actionSystemLogs.setOnClickListener(v -> {
-            Toast.makeText(this, "System Logs coming soon!", Toast.LENGTH_SHORT).show();
+        actionAnnouncements.setOnClickListener(v -> {
+            startActivity(new Intent(AdminDashboard.this, CreateAnnouncementActivity.class));
         });
 
         // Bottom Nav Listeners

@@ -10,10 +10,20 @@ import java.util.List;
 
 public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketViewHolder> {
 
+    public interface OnTicketClickListener {
+        void onTicketClick(Complaint complaint);
+    }
+
     private List<Complaint> ticketList;
+    private OnTicketClickListener listener;
 
     public TicketAdapter(List<Complaint> ticketList) {
         this.ticketList = ticketList;
+    }
+
+    public TicketAdapter(List<Complaint> ticketList, OnTicketClickListener listener) {
+        this.ticketList = ticketList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -31,6 +41,12 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         holder.location.setText(holder.itemView.getContext().getString(R.string.ticket_room_format, ticket.roomNumber));
         holder.description.setText(ticket.description);
         holder.assigned.setText(holder.itemView.getContext().getString(R.string.ticket_assigned_format, "Not Assigned"));
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onTicketClick(ticket);
+            }
+        });
 
         // Set status color
         if ("Pending".equalsIgnoreCase(ticket.status)) {
