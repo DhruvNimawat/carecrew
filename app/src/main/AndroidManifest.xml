@@ -64,6 +64,12 @@
             android:name=".TicketCenterActivity"
             android:exported="false" />
         <activity
+            android:name=".ComplaintDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateAnnouncementActivity"
+            android:exported="false" />
+        <activity
             android:name=".RaiseTicketActivity"
             android:exported="false" />
         <activity

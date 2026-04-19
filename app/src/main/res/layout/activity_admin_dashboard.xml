@@ -378,9 +378,9 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- System Logs -->
+        <!-- Announcements -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/actionSystemLogs"
+            android:id="@+id/actionAnnouncements"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
@@ -398,13 +398,13 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_health"
+                    android:src="@drawable/ic_announcement"
                     app:tint="#7B1FA2" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="System Logs"
+                    android:text="Announcements"
                     android:textColor="#7B1FA2"
                     android:textSize="15sp"
                     android:textStyle="bold" />

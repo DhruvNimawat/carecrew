@@ -1,13 +1,22 @@
 package com.example.carecrew;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,32 +24,142 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TicketCenterActivity extends AppCompatActivity {
 
     private TextView tvCountUnassigned, tvCountAssigned, tvCountCompleted, tvCountDelayed;
     private DatabaseReference mDatabase;
+
+    private RecyclerView rvRecentTickets;
+    private TicketAdapter ticketAdapter;
+    private List<Complaint> ticketList;
+    private List<Complaint> fullTicketList;
+    private AutoCompleteTextView etSearch;
+    private LinearLayout layoutOtherOptions;
+    private TextView tvRecentTicketsHeader, tvSubtitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_center);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Tickets");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("complaints");
 
         // Initialize Views
         tvCountUnassigned = findViewById(R.id.tvCountUnassigned);
         tvCountAssigned = findViewById(R.id.tvCountAssigned);
         tvCountCompleted = findViewById(R.id.tvCountCompleted);
         tvCountDelayed = findViewById(R.id.tvCountDelayed);
+        rvRecentTickets = findViewById(R.id.rvRecentTickets);
+        etSearch = findViewById(R.id.etSearch);
+        layoutOtherOptions = findViewById(R.id.layoutOtherOptions);
+        tvRecentTicketsHeader = findViewById(R.id.tvRecentTicketsHeader);
+        tvSubtitle = findViewById(R.id.tvSubtitle);
+
+        // Setup RecyclerView
+        ticketList = new ArrayList<>();
+        fullTicketList = new ArrayList<>();
+        ticketAdapter = new TicketAdapter(ticketList, complaint -> {
+            Intent intent = new Intent(TicketCenterActivity.this, ComplaintDetailsActivity.class);
+            intent.putExtra("category", complaint.category);
+            intent.putExtra("status", complaint.status);
+            intent.putExtra("description", complaint.description);
+            intent.putExtra("block", complaint.block);
+            intent.putExtra("floor", complaint.floor);
+            intent.putExtra("roomNumber", complaint.roomNumber);
+            intent.putExtra("priority", complaint.priority);
+            intent.putExtra("timestamp", complaint.timestamp);
+            intent.putExtra("assignedTo", complaint.assignedTo);
+            startActivity(intent);
+        });
+        rvRecentTickets.setLayoutManager(new LinearLayoutManager(this));
+        rvRecentTickets.setAdapter(ticketAdapter);
 
         ImageButton btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> {
+            if (etSearch.getText().length() > 0) {
+                etSearch.setText("");
+            } else {
+                finish();
+            }
+        });
 
         setupCardListeners();
-        setupRealtimeCounters();
+        setupRealtimeCountersAndList();
+        setupSearch();
     }
 
-    private void setupRealtimeCounters() {
+    private void setupSearch() {
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    private void filter(String text) {
+        List<Complaint> filteredList = new ArrayList<>();
+        List<String> suggestions = new ArrayList<>();
+        
+        if (text == null || text.trim().isEmpty()) {
+            layoutOtherOptions.setVisibility(View.VISIBLE);
+            tvRecentTicketsHeader.setVisibility(View.VISIBLE);
+            tvRecentTicketsHeader.setText("Recent Tickets");
+            if (tvSubtitle != null) tvSubtitle.setVisibility(View.VISIBLE);
+            filteredList.addAll(fullTicketList);
+        } else {
+            layoutOtherOptions.setVisibility(View.GONE);
+            tvRecentTicketsHeader.setVisibility(View.GONE);
+            if (tvSubtitle != null) tvSubtitle.setVisibility(View.GONE);
+            
+            String query = text.toLowerCase().trim();
+            for (Complaint item : fullTicketList) {
+                boolean matches = false;
+                if (item.category != null && item.category.toLowerCase().contains(query)) {
+                    matches = true;
+                    if (!suggestions.contains(item.category)) suggestions.add(item.category);
+                }
+                if (item.description != null && item.description.toLowerCase().contains(query)) {
+                    matches = true;
+                }
+                if (item.id != null && item.id.toLowerCase().contains(query)) {
+                    matches = true;
+                    if (!suggestions.contains(item.id)) suggestions.add(item.id);
+                }
+
+                if (matches) {
+                    filteredList.add(item);
+                }
+            }
+        }
+        
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suggestions);
+        etSearch.setAdapter(adapter);
+
+        ticketList.clear();
+        ticketList.addAll(filteredList);
+        ticketAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (etSearch.getText().length() > 0) {
+            etSearch.setText("");
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void setupRealtimeCountersAndList() {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -48,19 +167,26 @@ public class TicketCenterActivity extends AppCompatActivity {
                 int assigned = 0;
                 int completed = 0;
                 int delayed = 0;
+                fullTicketList.clear();
 
-                for (DataSnapshot ticket : snapshot.getChildren()) {
-                    String status = ticket.child("status").getValue(String.class);
+                for (DataSnapshot ticketSnapshot : snapshot.getChildren()) {
+                    Complaint ticket = ticketSnapshot.getValue(Complaint.class);
+                    if (ticket == null) continue;
+
+                    // Add to list
+                    fullTicketList.add(ticket);
+
+                    String status = ticket.status;
                     if (status == null) continue;
 
                     switch (status.toLowerCase()) {
                         case "open":
                         case "unassigned":
+                        case "pending":
                             unassigned++;
                             break;
                         case "assigned":
                         case "in progress":
-                        case "pending":
                             assigned++;
                             break;
                         case "completed":
@@ -75,24 +201,69 @@ public class TicketCenterActivity extends AppCompatActivity {
                     }
                 }
 
+                // Update UI
                 tvCountUnassigned.setText(String.format("%02d", unassigned));
                 tvCountAssigned.setText(String.format("%02d", assigned));
                 tvCountCompleted.setText(String.format("%02d", completed));
                 tvCountDelayed.setText(delayed + " Delayed");
+
+                filter(etSearch.getText().toString());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(TicketCenterActivity.this, "Error loading statistics", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TicketCenterActivity.this, "Error loading data", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setupCardListeners() {
-        findViewById(R.id.cardUnassigned).setOnClickListener(v -> showToast("Opening Unassigned Tickets"));
-        findViewById(R.id.cardAssigned).setOnClickListener(v -> showToast("Opening In-Progress Tickets"));
-        findViewById(R.id.cardCompleted).setOnClickListener(v -> showToast("Opening Completed Tickets"));
-        findViewById(R.id.cardDelayed).setOnClickListener(v -> showToast("Opening Delayed Tickets"));
+        CardView cardDelayed = findViewById(R.id.cardDelayed);
+        if (cardDelayed != null) {
+            cardDelayed.setOnClickListener(v -> {
+                showDelayedTickets();
+            });
+        }
+    }
+
+    private void showDelayedTickets() {
+        List<Complaint> delayedTickets = new ArrayList<>();
+        long currentTime = System.currentTimeMillis();
+        long twentyFourHours = 24 * 60 * 60 * 1000L;
+        long fortyEightHours = 48 * 60 * 60 * 1000L;
+
+        for (Complaint ticket : fullTicketList) {
+            long ticketTimestamp = ticket.getTimestampLong();
+            if (ticketTimestamp == 0) continue;
+            
+            long age = currentTime - ticketTimestamp;
+            // Overdue by 24h to 48h and not assigned
+            boolean isDelayed = (age >= twentyFourHours && age <= fortyEightHours);
+            boolean isUnassigned = (ticket.assignedTo == null || ticket.assignedTo.isEmpty());
+            boolean isNotCompleted = (ticket.status == null || !ticket.status.equalsIgnoreCase("Completed"));
+
+            if (isDelayed && isUnassigned && isNotCompleted) {
+                delayedTickets.add(ticket);
+            }
+        }
+
+        if (delayedTickets.isEmpty()) {
+            Toast.makeText(this, "No tickets in the 24h-48h window", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Display them
+        layoutOtherOptions.setVisibility(View.GONE);
+        tvRecentTicketsHeader.setVisibility(View.VISIBLE);
+        tvRecentTicketsHeader.setText("Overdue (24h - 48h)");
+        if (tvSubtitle != null) tvSubtitle.setVisibility(View.GONE);
+        
+        ticketList.clear();
+        ticketList.addAll(delayedTickets);
+        ticketAdapter.notifyDataSetChanged();
+        
+        etSearch.setText(""); // Clear search to avoid confusion
+        Toast.makeText(this, "Showing " + delayedTickets.size() + " unassigned overdue tickets", Toast.LENGTH_SHORT).show();
     }
 
     private void showToast(String message) {

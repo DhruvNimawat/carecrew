@@ -364,34 +364,37 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#FFF9C4"
+                    android:background="#E3F2FD"
                     android:orientation="horizontal"
                     android:padding="16dp"
                     android:gravity="center_vertical">
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@android:drawable/ic_dialog_alert"
-                        app:tint="#FBC02D"
-                        android:contentDescription="Alert Icon" />
+                        android:src="@android:drawable/ic_dialog_info"
+                        app:tint="#1E88E5"
+                        android:contentDescription="Info Icon" />
                     <LinearLayout
+                        android:id="@+id/announcementContent"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
                         android:orientation="vertical">
                         <TextView
+                            android:id="@+id/tvAnnouncementTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Maintenance Notice"
-                            android:textColor="#FBC02D"
+                            android:text="No Announcements"
+                            android:textColor="#1E88E5"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tvAnnouncementMessage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Scheduled server maintenance on Sunday, 2 PM."
-                            android:textColor="#616161"
+                            android:text="Stay tuned for updates from the administration."
+                            android:textColor="#455A64"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
