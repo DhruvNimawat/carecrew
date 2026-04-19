@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ticket_categories">
+        <item>Electrical</item>
+        <item>Plumbing</item>
+        <item>Carpentry</item>
+        <item>Cleaning</item>
+        <item>Internet/Wi-Fi</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="user_roles">
+        <item>Student</item>
+        <item>Staff</item>
+        <item>Warden</item>
+    </string-array>
+</resources>

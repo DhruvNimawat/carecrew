@@ -1,5 +1,6 @@
 package com.example.carecrew;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -76,9 +77,8 @@ public class AdminLoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 Toast.makeText(this, "Admin Login Successful!", Toast.LENGTH_SHORT).show();
-                                // TODO: Navigate to AdminDashboardActivity
-                                // startActivity(new Intent(AdminLoginActivity.this, AdminDashboardActivity.class));
-                                // finish();
+                                startActivity(new Intent(AdminLoginActivity.this, AdminDashboard.class));
+                                finish();
                             } else {
                                 Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
                             }

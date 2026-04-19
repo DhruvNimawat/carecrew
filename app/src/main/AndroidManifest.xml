@@ -52,6 +52,21 @@
             android:name=".UserLoginActivity"
             android:exported="false" />
         <activity
+            android:name=".AddUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StaffReviewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TicketCenterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RaiseTicketActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
