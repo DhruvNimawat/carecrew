@@ -3,4 +3,37 @@
     <string name="review_location_format">Block %1$s, Floor %2$s, Room %3$s</string>
     <string name="ticket_room_format">Room: %1$s</string>
     <string name="ticket_assigned_format">Assigned to: %1$s</string>
+
+    <!-- Location Selection -->
+    <string name="title_select_location">Select Location</string>
+    <string name="subtitle_location_step">Step 3: Where is the issue?</string>
+    <string name="label_building_hostel">Building / Hostel</string>
+    <string name="hint_select_building">Select Building</string>
+    <string name="label_floor">Floor</string>
+    <string name="hint_select_floor">Select Floor</string>
+    <string name="label_room_number">Room Number</string>
+    <string name="hint_enter_room_no">Enter Room No.</string>
+    <string name="btn_continue">Continue</string>
+    <string name="desc_back">Back</string>
+
+    <string-array name="buildings_array">
+        <item>GA building</item>
+        <item>GB building</item>
+        <item>NB building</item>
+        <item>Bhagat singh hostel</item>
+        <item>Vikram sarabai Hostel</item>
+        <item>Ratan Tata hostel</item>
+        <item>Apj abdul kalam hostel</item>
+        <item>Kalpana Chawla hostel</item>
+        <item>Gargi hostel</item>
+        <item>Workshop</item>
+    </string-array>
+
+    <string-array name="floors_array">
+        <item>Ground Floor</item>
+        <item>1st Floor</item>
+        <item>2nd Floor</item>
+        <item>3rd Floor</item>
+        <item>4th Floor</item>
+    </string-array>
 </resources>

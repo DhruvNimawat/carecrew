@@ -1,5 +1,6 @@
 package com.example.carecrew;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -61,9 +62,8 @@ public class WardenLoginActivity extends AppCompatActivity {
                 // Simple login for demonstration (You can add Firebase Auth here)
                 if (email.endsWith("@bmu.edu.in") && !password.isEmpty()) {
                     Toast.makeText(this, "Warden Login Successful!", Toast.LENGTH_SHORT).show();
-                    // TODO: Navigate to WardenDashboardActivity
-                    // startActivity(new Intent(WardenLoginActivity.this, WardenDashboardActivity.class));
-                    // finish();
+                    startActivity(new Intent(WardenLoginActivity.this, WardenDashboard.class));
+                    finish();
                 } else {
                     Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
                 }
