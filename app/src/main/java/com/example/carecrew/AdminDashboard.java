@@ -22,7 +22,7 @@ public class AdminDashboard extends AppCompatActivity {
     private TextView tvTotalUsers, tvOpenTickets, tvActiveStaff, tvSystemAlerts, tvAdminGreeting;
     private ImageButton btnLogout;
     private View actionAddStaff, actionTicketsCenter, actionStaffReviews, actionSystemLogs;
-    private View navHome, navRaise, navComplaints, navProfile;
+    private View navHome, navHistory, navProfile;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
@@ -50,8 +50,7 @@ public class AdminDashboard extends AppCompatActivity {
 
         // Initialize Nav
         navHome = findViewById(R.id.navHome);
-        navRaise = findViewById(R.id.navRaise);
-        navComplaints = findViewById(R.id.navComplaints);
+        navHistory = findViewById(R.id.navHistory);
         navProfile = findViewById(R.id.navProfile);
 
         setupClickListeners();
@@ -68,7 +67,7 @@ public class AdminDashboard extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         String name = snapshot.getValue(String.class);
-                        tvAdminGreeting.setText("Welcome, " + name);
+                        tvAdminGreeting.setText(getString(R.string.welcome_name_format, name));
                     }
                 }
                 @Override
@@ -99,17 +98,14 @@ public class AdminDashboard extends AppCompatActivity {
         });
 
         actionSystemLogs.setOnClickListener(v -> {
-            Toast.makeText(this, "System Logs coming soon!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_system_logs), Toast.LENGTH_SHORT).show();
         });
 
         // Bottom Nav Listeners
         navHome.setOnClickListener(v -> {
             // Already here
         });
-        navRaise.setOnClickListener(v -> {
-            startActivity(new Intent(this, RaiseTicketActivity.class));
-        });
-        navComplaints.setOnClickListener(v -> {
+        navHistory.setOnClickListener(v -> {
             startActivity(new Intent(this, TicketCenterActivity.class));
         });
         navProfile.setOnClickListener(v -> {
@@ -139,7 +135,7 @@ public class AdminDashboard extends AppCompatActivity {
         });
 
         // Open Tickets
-        mDatabase.child("Tickets").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("complaints").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int openCount = 0;

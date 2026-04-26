@@ -60,7 +60,7 @@ public class RaiseTicketActivity extends AppCompatActivity {
 
         if (mAuth.getCurrentUser() == null) return;
         String userEmail = mAuth.getCurrentUser().getEmail();
-        String ticketId = mDatabase.child("Tickets").push().getKey();
+        String ticketId = mDatabase.child("complaints").push().getKey();
 
         Map<String, Object> ticket = new HashMap<>();
         ticket.put("ticketId", ticketId);
@@ -73,7 +73,7 @@ public class RaiseTicketActivity extends AppCompatActivity {
         ticket.put("timestamp", System.currentTimeMillis());
 
         if (ticketId != null) {
-            mDatabase.child("Tickets").child(ticketId).setValue(ticket)
+            mDatabase.child("complaints").child(ticketId).setValue(ticket)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(RaiseTicketActivity.this, "Ticket raised successfully!", Toast.LENGTH_SHORT).show();
                     finish();

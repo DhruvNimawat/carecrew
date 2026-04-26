@@ -3,7 +3,10 @@ package com.example.carecrew;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +27,9 @@ public class AdminLoginActivity extends AppCompatActivity {
     private TextInputEditText emailEditText, passwordEditText;
     private MaterialButton loginButton;
     private LinearLayout btnBackToRoles;
+    private TextView loginTitle, loginSubTitle;
+    private View loginHeaderBg, loginHeaderCurve;
+    private androidx.cardview.widget.CardView mainLogoCard;
 
     private FirebaseAuth mAuth;
 
@@ -46,6 +52,25 @@ public class AdminLoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
         btnBackToRoles = findViewById(R.id.btnBackToRoles);
+        loginTitle = findViewById(R.id.loginTitle);
+        loginSubTitle = findViewById(R.id.loginSubTitle);
+        loginHeaderBg = findViewById(R.id.loginHeaderBg);
+        loginHeaderCurve = findViewById(R.id.loginHeaderCurve);
+        mainLogoCard = findViewById(R.id.mainLogoCard);
+
+        // Apply animations
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation topDown = AnimationUtils.loadAnimation(this, R.anim.top_down);
+
+        if (loginHeaderBg != null) loginHeaderBg.startAnimation(topDown);
+        if (loginHeaderCurve != null) loginHeaderCurve.startAnimation(topDown);
+        if (mainLogoCard != null) mainLogoCard.startAnimation(fadeIn);
+        if (loginTitle != null) loginTitle.startAnimation(fadeIn);
+        if (loginSubTitle != null) loginSubTitle.startAnimation(fadeIn);
+        if (findViewById(R.id.loginCard) != null) {
+            Animation popIn = AnimationUtils.loadAnimation(this, R.anim.pop_in);
+            findViewById(R.id.loginCard).startAnimation(popIn);
+        }
 
         // Back to Roles Click
         if (btnBackToRoles != null) {

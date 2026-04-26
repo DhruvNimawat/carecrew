@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         View roleView = LayoutInflater.from(this).inflate(R.layout.activity_role_selection, contentFrame, false);
         
         // Preparation: Find target position in the new layout
-        View logoPlaceholder = roleView.findViewById(R.id.logoPlaceholder);
+        View mainLogo = roleView.findViewById(R.id.mainLogo);
         View headerTextSection = roleView.findViewById(R.id.headerTextSection);
         View topHeaderBg = roleView.findViewById(R.id.topHeaderBg);
         View headerCurve = roleView.findViewById(R.id.headerCurve);
@@ -89,16 +89,18 @@ public class MainActivity extends AppCompatActivity {
 
         handler.post(() -> {
             int[] targetLocation = new int[2];
-            logoPlaceholder.getLocationOnScreen(targetLocation);
+            if (mainLogo != null) {
+                mainLogo.getLocationOnScreen(targetLocation);
 
-            sharedLogoCard.animate()
-                    .x(targetLocation[0])
-                    .y(targetLocation[1])
-                    .scaleX(0.83f) // 100dp / 120dp approx
-                    .scaleY(0.83f)
-                    .setDuration(1000)
-                    .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
-                    .start();
+                sharedLogoCard.animate()
+                        .x(targetLocation[0])
+                        .y(targetLocation[1])
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .setDuration(1000)
+                        .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
+                        .start();
+            }
         });
 
         // Animate other elements

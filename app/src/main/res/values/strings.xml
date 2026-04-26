@@ -1,6 +1,119 @@
 <resources>
     <string name="app_name">CareCrew</string>
     <string name="review_location_format">Block %1$s, Floor %2$s, Room %3$s</string>
-    <string name="ticket_room_format">Room: %1$s</string>
-    <string name="ticket_assigned_format">Assigned to: %1$s</string>
+    <string name="ticket_room_format">Room %1$s</string>
+    <string name="ticket_assigned_format">Assigned: %1$s</string>
+    <string name="ticket_user_format">User: %1$s</string>
+    <string name="not_available">N/A</string>
+    <string name="not_assigned">Not Assigned</string>
+    <string name="unassigned">Unassigned</string>
+    <string name="status_unknown">Unknown</string>
+    <string name="ticket_id_prefix">#SR%1$s</string>
+
+    <!-- Dashboard Greetings -->
+    <string name="welcome_user">Welcome User</string>
+    <string name="welcome_staff">Welcome, Staff</string>
+    <string name="welcome_warden">Welcome Warden</string>
+    <string name="welcome_admin">Welcome Admin</string>
+    <string name="welcome_name_format">Welcome %1$s</string>
+    <string name="toast_after_image_saved">After image saved!</string>
+    <string name="toast_please_enter_notes">Please enter repair notes</string>
+    <string name="toast_ticket_accepted">Ticket Accepted! Moved to My Jobs</string>
+    <string name="toast_failed_accept">Failed to accept job</string>
+    <string name="toast_job_rejected">Job Rejected</string>
+
+    <!-- Dashboard Slogans -->
+    <string name="slogan_default">CareCrew is delighted to serve you\nBuilding a better campus together.</string>
+    <string name="slogan_warden">Ensuring hostel excellence\nand student well-being.</string>
+
+    <!-- Status Labels -->
+    <string name="status_pending">Pending</string>
+    <string name="status_inprogress">In Progress</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="status_resolved">Resolved</string>
+    <string name="status_accepted">Accepted</string>
+    <!-- Dashboard Labels -->
+    <string name="label_available">Available</string>
+    <string name="label_my_jobs">My Jobs</string>
+    <string name="label_history">History</string>
+    <string name="label_profile">Profile</string>
+    <string name="label_home">Home</string>
+    <string name="label_live">Live</string>
+    <string name="label_active">Active</string>
+    <string name="label_resolved">Resolved</string>
+    <string name="label_tickets">Tickets</string>
+    <string name="label_verify_issues">Verify\nIssues</string>
+    <string name="label_hostel_inspection">Hostel\nInspection</string>
+    <string name="label_total_users">Total Users</string>
+    <string name="label_open_tickets">Open Tickets</string>
+    <string name="label_active_staff">Active Staff</string>
+    <string name="label_system_alerts">System Alerts</string>
+    <string name="label_add_staff">Add Staff</string>
+    <string name="label_tickets_center">Tickets Center</string>
+    <string name="label_staff_reviews">Staff Reviews</string>
+    <string name="label_system_logs">System Logs</string>
+    <string name="logout">Logout</string>
+    <string name="label_total_tickets">Total Tickets</string>
+    <string name="status_urgent">Urgent</string>
+    <string name="label_raise_ticket">Raise\nTicket</string>
+    <string name="label_my_tickets">My\nTickets</string>
+    <string name="label_recent_updates">Recent\nUpdates</string>
+    <string name="label_profile_details">Profile\nDetails</string>
+    <string name="label_maintenance_notice">Maintenance Notice</string>
+    <string name="msg_maintenance">Scheduled server maintenance on Sunday, 2 PM.</string>
+
+    <string name="desc_new_tickets">New Tickets</string>
+    <string name="desc_active_tasks">Active Tasks</string>
+    <string name="desc_past_work">Past Work</string>
+    <string name="desc_settings">Settings</string>
+    <string name="ready_for_tasks">Ready for today\'s tasks?</string>
+    <string name="back">Back</string>
+    <string name="available_tickets">Available Tickets</string>
+    <string name="find_and_accept">Find and accept new tasks</string>
+    <string name="my_active_jobs">My Active Jobs</string>
+    <string name="tasks_accepted">Tasks you\'ve accepted</string>
+    <string name="work_history">Work History</string>
+    <string name="past_tasks_records">Your past tasks and records</string>
+
+    <!-- Ticket Details & Job Update -->
+    <string name="ticket_details_title">Ticket Details</string>
+    <string name="review_before_accepting">Review before accepting</string>
+    <string name="work_in_progress_title">Work In Progress</string>
+    <string name="update_job_state">Update job state</string>
+    <string name="ticket_id_label">Ticket ID</string>
+    <string name="category_label">Category</string>
+    <string name="location_label">Location</string>
+    <string name="priority_label">Priority</string>
+    <string name="description_label">Description</string>
+    <string name="accept_job">Accept Job</string>
+    <string name="user_label">User</string>
+    <string name="room_label">Room</string>
+    <string name="status_label">Status</string>
+    <string name="start_work">Start Work</string>
+    <string name="mark_in_progress">Mark In Progress</string>
+    <string name="complete">Complete</string>
+    <string name="cancel">Cancel</string>
+    <string name="header_wave_desc">Header wave</string>
+    <string name="work_started_photo">Work Started Photo</string>
+    <string name="camera_label">CAMERA</string>
+    <string name="work_started_instruction">Work Started! Click an image to proceed.</string>
+
+    <!-- Role Selection -->
+    <string name="role_selection_title">Choose Your Identity</string>
+    <string name="role_selection_subtitle">How will you use Care Crew today?</string>
+    <string name="role_user">User</string>
+    <string name="role_user_desc">Report issues</string>
+    <string name="role_admin">Admin</string>
+    <string name="role_admin_desc">Full Control</string>
+    <string name="role_staff">Staff</string>
+    <string name="role_staff_desc">Maintenance</string>
+    <string name="role_warden">Warden</string>
+    <string name="role_warden_desc">Hostel Care</string>
+
+    <!-- Missing Strings -->
+    <string name="toast_system_logs">Opening System Logs</string>
+    <string name="label_task_completed">Task Completed Successfully</string>
+    <string name="toast_recent_updates">Refreshing updates...</string>
+    <string name="toast_room_inspection">Opening Room Inspection</string>
 </resources>

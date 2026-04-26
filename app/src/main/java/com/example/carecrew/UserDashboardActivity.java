@@ -40,15 +40,15 @@ public class UserDashboardActivity extends AppCompatActivity {
         updateStats();
 
         cardRaiseComplaint.setOnClickListener(v -> 
-            startActivity(new Intent(UserDashboardActivity.this, RaiseComplaintActivity.class))
+            startActivity(new Intent(UserDashboardActivity.this, RaiseTicketActivity.class))
         );
 
         cardMyTickets.setOnClickListener(v -> 
-            startActivity(new Intent(UserDashboardActivity.this, MyTicketsActivity.class))
+            startActivity(new Intent(UserDashboardActivity.this, TicketCenterActivity.class))
         );
 
         cardUpdates.setOnClickListener(v -> 
-            android.widget.Toast.makeText(this, "Recent Updates coming soon!", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(this, getString(R.string.toast_recent_updates), android.widget.Toast.LENGTH_SHORT).show()
         );
 
         cardProfile.setOnClickListener(v -> 
@@ -61,6 +61,20 @@ public class UserDashboardActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+        });
+
+        findViewById(R.id.navHome).setOnClickListener(v -> {
+            // Already home
+        });
+
+        findViewById(R.id.navHistory).setOnClickListener(v -> 
+            startActivity(new Intent(UserDashboardActivity.this, TicketCenterActivity.class))
+        );
+
+        findViewById(R.id.navProfile).setOnClickListener(v -> {
+            Intent intent = new Intent(UserDashboardActivity.this, ProfileActivity.class);
+            intent.putExtra("role", "User");
+            startActivity(intent);
         });
 
         // Add listeners for Profile and Updates as needed

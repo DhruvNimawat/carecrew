@@ -38,8 +38,8 @@
     <!-- Logo placeholder (actual logo is shared and floats) -->
     <View
         android:id="@+id/logoPlaceholder"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

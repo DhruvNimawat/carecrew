@@ -10,10 +10,15 @@
     <color name="dark_blue">#0D47A1</color>
 
     <!-- Role Colors -->
-    <color name="role_student">#1E88E5</color>
-    <color name="role_admin">#D32F2F</color>
-    <color name="role_staff">#43A047</color>
-    <color name="role_warden">#8E24AA</color>
+    <color name="role_student">#2196F3</color>
+    <color name="role_admin">#F44336</color>
+    <color name="role_staff">#4CAF50</color>
+    <color name="role_warden">#9C27B0</color>
+
+    <!-- Theme Colors -->
+    <color name="card_dark_bg">#373737</color>
+    <color name="text_grey">#9E9E9E</color>
+    <color name="header_blue">#1976D2</color>
 
     <!-- Text Colors -->
     <color name="text_title">#0D47A1</color>

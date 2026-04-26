@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +12,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CareCrew">
 
+        <activity
+            android:name=".JobCompletionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JobSummaryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CancelJobActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JobUpdateStaffActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AcceptedJobsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TicketDetailsStaffActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AvailableTicketsActivity"
+            android:exported="false" />
         <activity
             android:name=".UserDashboardActivity"
             android:exported="false" />
@@ -58,6 +82,9 @@
             android:name=".StaffReviewsActivity"
             android:exported="false" />
         <activity
+            android:name=".StaffHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
@@ -74,6 +101,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.carecrew.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

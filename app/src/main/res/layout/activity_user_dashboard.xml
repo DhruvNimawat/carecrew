@@ -8,13 +8,24 @@
     android:background="#F8FBFF"
     tools:context=".UserDashboardActivity">
 
-    <!-- Blue Header Background -->
+    <!-- Top Blue Header -->
     <View
-        android:id="@+id/headerBackground"
+        android:id="@+id/headerBg"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:background="@color/dark_blue"
+        android:layout_height="280dp"
+        android:background="@drawable/gradient_header_blue"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/headerCurve"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="-60dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/wave_3"
+        app:layout_constraintTop_toBottomOf="@id/headerBg"
+        app:tint="#F8FBFF"
+        android:contentDescription="Header wave" />
 
     <!-- CareCrew Tag -->
     <TextView
@@ -39,7 +50,7 @@
         android:layout_height="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:contentDescription="Logout"
+        android:contentDescription="@string/logout"
         android:src="@android:drawable/ic_lock_power_off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
-        android:text="Welcome, User"
+        android:text="@string/welcome_user"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -65,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:text="CareCrew is delighted to serve you\nBuilding a better campus together."
+        android:text="@string/slogan_default"
         android:textColor="#CCFFFFFF"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +87,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingBottom="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavCard"
         app:layout_constraintTop_toBottomOf="@id/welcomeSubtitle">
 
         <LinearLayout
@@ -109,14 +120,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● Live"
+                            android:text="@string/label_live"
                             android:textColor="#4CAF50"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Tickets"
+                            android:text="@string/label_total_tickets"
                             android:textColor="#78909C"
                             android:textSize="12sp" />
                         <TextView
@@ -138,14 +149,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● Live"
+                            android:text="@string/label_live"
                             android:textColor="#F44336"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Pending"
+                            android:text="@string/status_pending"
                             android:textColor="#78909C"
                             android:textSize="12sp" />
                         <TextView
@@ -168,14 +179,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● Live"
+                            android:text="@string/label_live"
                             android:textColor="#2196F3"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="In Progress"
+                            android:text="@string/status_inprogress"
                             android:textColor="#78909C"
                             android:textSize="12sp" />
                         <TextView
@@ -198,14 +209,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● Live"
+                            android:text="@string/label_live"
                             android:textColor="#FF9800"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Urgent"
+                            android:text="@string/status_urgent"
                             android:textColor="#78909C"
                             android:textSize="12sp" />
                         <TextView
@@ -228,7 +239,7 @@
                 android:layout_marginTop="8dp"
                 android:columnCount="2">
 
-                <!-- Raise Complaint -->
+                <!-- Raise Ticket -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardRaiseComplaint"
                     android:layout_width="0dp"
@@ -252,7 +263,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            android:text="Raise\nComplaint"
+                            android:text="@string/label_raise_ticket"
                             android:gravity="center"
                             android:textColor="#1976D2"
                             android:textStyle="bold" />
@@ -283,7 +294,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            android:text="My\nTickets"
+                            android:text="@string/label_my_tickets"
                             android:gravity="center"
                             android:textColor="#E65100"
                             android:textStyle="bold" />
@@ -314,7 +325,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            android:text="Recent\nUpdates"
+                            android:text="@string/label_recent_updates"
                             android:gravity="center"
                             android:textColor="#388E3C"
                             android:textStyle="bold" />
@@ -345,7 +356,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            android:text="Profile\nDetails"
+                            android:text="@string/label_profile_details"
                             android:gravity="center"
                             android:textColor="#8E24AA"
                             android:textStyle="bold" />
@@ -383,14 +394,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Maintenance Notice"
+                            android:text="@string/label_maintenance_notice"
                             android:textColor="#FBC02D"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Scheduled server maintenance on Sunday, 2 PM."
+                            android:text="@string/msg_maintenance"
                             android:textColor="#616161"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -399,5 +410,101 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <!-- Custom Bottom Navigation -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/bottomNavCard"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="12dp"
+        app:cardBackgroundColor="#1A1C1E"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="12dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/navHome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_home"
+                    app:tint="#4CAF50"
+                    android:contentDescription="@string/label_home" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/label_home"
+                    android:textColor="#4CAF50"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navHistory"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_report"
+                    app:tint="#94A3B8"
+                    android:contentDescription="@string/label_history" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/label_history"
+                    android:textColor="#94A3B8"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_profile"
+                    app:tint="#94A3B8"
+                    android:contentDescription="@string/label_profile" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/label_profile"
+                    android:textColor="#94A3B8"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

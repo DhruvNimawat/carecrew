@@ -9,11 +9,22 @@
 
     <!-- Header Section -->
     <View
-        android:id="@+id/headerView"
+        android:id="@+id/headerBg"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="#1976D2"
+        android:layout_height="280dp"
+        android:background="@drawable/gradient_header_blue"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/headerCurve"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="-60dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/wave_3"
+        app:layout_constraintTop_toBottomOf="@id/headerBg"
+        app:tint="#F8FAFC"
+        android:contentDescription="Header wave" />
 
     <TextView
         android:id="@+id/tvLogo"
@@ -42,7 +53,8 @@
         android:src="@drawable/ic_logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        android:contentDescription="@string/logout" />
 
     <TextView
         android:id="@+id/tvAdminGreeting"
@@ -50,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
-        android:text="Welcome, Admin"
+        android:text="@string/welcome_admin"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -64,7 +76,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="40dp"
-        android:text="CareCrew is delighted to serve you\nBuilding a better campus together."
+        android:text="@string/slogan_default"
         android:textColor="#E3F2FD"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +94,7 @@
         app:cardCornerRadius="24dp"
         app:cardElevation="12dp"
         app:strokeWidth="0dp"
-        app:layout_constraintTop_toBottomOf="@id/headerView">
+        app:layout_constraintTop_toBottomOf="@id/headerBg">
 
         <GridLayout
             android:layout_width="match_parent"
@@ -105,13 +117,12 @@
                     <View
                         android:layout_width="6dp"
                         android:layout_height="6dp"
-                        android:background="@drawable/circle_bg"
-                        android:backgroundTint="#4CAF50" />
+                        android:background="#4CAF50" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
-                        android:text="Live"
+                        android:text="@string/label_live"
                         android:textColor="#4CAF50"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -119,7 +130,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Users"
+                    android:text="@string/label_total_users"
                     android:textColor="#94A3B8"
                     android:textSize="12sp" />
                 <TextView
@@ -148,13 +159,12 @@
                     <View
                         android:layout_width="6dp"
                         android:layout_height="6dp"
-                        android:background="@drawable/circle_bg"
-                        android:backgroundTint="#EF4444" />
+                        android:background="#EF4444" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
-                        android:text="Live"
+                        android:text="@string/label_live"
                         android:textColor="#EF4444"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -162,7 +172,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Open Tickets"
+                    android:text="@string/label_open_tickets"
                     android:textColor="#94A3B8"
                     android:textSize="12sp" />
                 <TextView
@@ -192,13 +202,12 @@
                     <View
                         android:layout_width="6dp"
                         android:layout_height="6dp"
-                        android:background="@drawable/circle_bg"
-                        android:backgroundTint="#3B82F6" />
+                        android:background="#3B82F6" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
-                        android:text="Live"
+                        android:text="@string/label_live"
                         android:textColor="#3B82F6"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -206,7 +215,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Active Staff"
+                    android:text="@string/label_active_staff"
                     android:textColor="#94A3B8"
                     android:textSize="12sp" />
                 <TextView
@@ -236,13 +245,12 @@
                     <View
                         android:layout_width="6dp"
                         android:layout_height="6dp"
-                        android:background="@drawable/circle_bg"
-                        android:backgroundTint="#F59E0B" />
+                        android:background="#F59E0B" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
-                        android:text="Live"
+                        android:text="@string/label_live"
                         android:textColor="#F59E0B"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -250,7 +258,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="System Alerts"
+                    android:text="@string/label_system_alerts"
                     android:textColor="#94A3B8"
                     android:textSize="12sp" />
                 <TextView
@@ -305,7 +313,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Add Staff"
+                    android:text="@string/label_add_staff"
                     android:textColor="#1976D2"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -338,7 +346,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Tickets Center"
+                    android:text="@string/label_tickets_center"
                     android:textColor="#E65100"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -371,7 +379,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Staff Reviews"
+                    android:text="@string/label_staff_reviews"
                     android:textColor="#2E7D32"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -404,7 +412,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="System Logs"
+                    android:text="@string/label_system_logs"
                     android:textColor="#7B1FA2"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -437,81 +445,46 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_home"
-                    app:tint="#FFFFFF" />
+                    app:tint="#4CAF50"
+                    android:contentDescription="@string/label_home" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Home"
-                    android:textColor="#FFFFFF"
+                    android:text="@string/label_home"
+                    android:textColor="#4CAF50"
                     android:textSize="11sp" />
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@drawable/circle_bg"
-                    android:backgroundTint="#4CAF50" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/navRaise"
+                android:id="@+id/navHistory"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/ic_add"
-                    app:tint="#94A3B8" />
+                    android:src="@drawable/ic_report"
+                    app:tint="#94A3B8"
+                    android:contentDescription="@string/label_history" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Raise"
+                    android:text="@string/label_history"
                     android:textColor="#94A3B8"
                     android:textSize="11sp" />
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="2dp"
-                    android:alpha="0"
-                    android:background="@drawable/circle_bg"
-                    android:backgroundTint="#FFFFFF" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/navComplaints"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_ticket"
-                    app:tint="#94A3B8" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Complaints"
-                    android:textColor="#94A3B8"
-                    android:textSize="11sp" />
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="2dp"
-                    android:alpha="0"
-                    android:background="@drawable/circle_bg"
-                    android:backgroundTint="#FFFFFF" />
             </LinearLayout>
 
             <LinearLayout
@@ -520,26 +493,22 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_profile"
-                    app:tint="#94A3B8" />
+                    app:tint="#94A3B8"
+                    android:contentDescription="@string/label_profile" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Profile"
+                    android:text="@string/label_profile"
                     android:textColor="#94A3B8"
                     android:textSize="11sp" />
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="2dp"
-                    android:alpha="0"
-                    android:background="@drawable/circle_bg"
-                    android:backgroundTint="#FFFFFF" />
             </LinearLayout>
 
         </LinearLayout>
