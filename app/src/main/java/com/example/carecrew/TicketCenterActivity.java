@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TicketCenterActivity extends AppCompatActivity {
@@ -79,9 +80,19 @@ public class TicketCenterActivity extends AppCompatActivity {
 
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> {
-            if (etSearch.getText().length() > 0) {
+            if (layoutOtherOptions.getVisibility() == View.GONE) {
+                // If a filter is applied (status cards or search), go back to "Recent Tickets" view
                 etSearch.setText("");
+                layoutOtherOptions.setVisibility(View.VISIBLE);
+                tvRecentTicketsHeader.setVisibility(View.VISIBLE);
+                tvRecentTicketsHeader.setText("Recent Tickets");
+                if (tvSubtitle != null) tvSubtitle.setVisibility(View.VISIBLE);
+                
+                ticketList.clear();
+                ticketList.addAll(fullTicketList);
+                ticketAdapter.notifyDataSetChanged();
             } else {
+                // If already on the main view, finish activity
                 finish();
             }
         });
@@ -201,6 +212,9 @@ public class TicketCenterActivity extends AppCompatActivity {
                     }
                 }
 
+                // Sort list by timestamp (descending - latest first)
+                Collections.sort(fullTicketList, (c1, c2) -> Long.compare(c2.getTimestampLong(), c1.getTimestampLong()));
+
                 // Update UI
                 tvCountUnassigned.setText(String.format("%02d", unassigned));
                 tvCountAssigned.setText(String.format("%02d", assigned));
@@ -218,12 +232,50 @@ public class TicketCenterActivity extends AppCompatActivity {
     }
 
     private void setupCardListeners() {
+        View cardUnassigned = findViewById(R.id.cardUnassigned);
+        View cardAssigned = findViewById(R.id.cardAssigned);
+        View cardCompleted = findViewById(R.id.cardCompleted);
+
+        if (cardUnassigned != null) cardUnassigned.setOnClickListener(v -> filterByStatus("unassigned"));
+        if (cardAssigned != null) cardAssigned.setOnClickListener(v -> filterByStatus("assigned"));
+        if (cardCompleted != null) cardCompleted.setOnClickListener(v -> filterByStatus("completed"));
+
         CardView cardDelayed = findViewById(R.id.cardDelayed);
         if (cardDelayed != null) {
             cardDelayed.setOnClickListener(v -> {
                 showDelayedTickets();
             });
         }
+    }
+
+    private void filterByStatus(String statusQuery) {
+        etSearch.setText(""); // Clear search
+        layoutOtherOptions.setVisibility(View.GONE);
+        tvRecentTicketsHeader.setVisibility(View.VISIBLE);
+        tvRecentTicketsHeader.setText(statusQuery.substring(0, 1).toUpperCase() + statusQuery.substring(1) + " Tickets");
+        if (tvSubtitle != null) tvSubtitle.setVisibility(View.GONE);
+
+        List<Complaint> filteredList = new ArrayList<>();
+        for (Complaint item : fullTicketList) {
+            String status = item.status != null ? item.status.toLowerCase() : "";
+            if (statusQuery.equals("unassigned")) {
+                if (status.equals("open") || status.equals("unassigned") || status.equals("pending")) {
+                    filteredList.add(item);
+                }
+            } else if (statusQuery.equals("assigned")) {
+                if (status.equals("assigned") || status.equals("in progress")) {
+                    filteredList.add(item);
+                }
+            } else if (statusQuery.equals("completed")) {
+                if (status.equals("completed") || status.equals("resolved") || status.equals("closed")) {
+                    filteredList.add(item);
+                }
+            }
+        }
+
+        ticketList.clear();
+        ticketList.addAll(filteredList);
+        ticketAdapter.notifyDataSetChanged();
     }
 
     private void showDelayedTickets() {

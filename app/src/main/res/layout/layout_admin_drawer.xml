@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/settingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin Hub"
+        android:textColor="#0F172A"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/role_admin" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Profile Dropdown -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profileSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#F1F5F9"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F8FAFC"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:id="@+id/tvRoleLabel"
+                        android:text="USER"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView android:id="@+id/tvUserID" android:text="ID: Loading..." android:textColor="#64748B" android:textSize="11sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewProfile"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View Full Profile"
+                        android:textAllCaps="false"
+                        android:textColor="@color/primary_blue"
+                        app:icon="@drawable/ic_chevron_right"
+                        app:iconGravity="textEnd" />
+                    <LinearLayout
+                        android:id="@+id/layoutProfileDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <TextView android:id="@+id/tvDrawerAdminName" android:text="Name: ..." android:textColor="#1E293B" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/tvDrawerAdminEmail" android:text="Email: ..." android:textColor="#475569" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- App Info Dropdown -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#F1F5F9"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F8FAFC"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:text="SYSTEM" android:textColor="#64748B" android:textSize="12sp" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewAppInfo"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="App Info"
+                        android:textAllCaps="false"
+                        android:textColor="#334155"
+                        app:icon="@drawable/ic_chevron_right"
+                        app:iconGravity="textEnd" />
+                    <LinearLayout
+                        android:id="@+id/layoutAppInfoDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <TextView android:text="CareCrew v1.0.4" android:textColor="#1E293B" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:text="A centralized complaint management system for campus hostels. Designed to streamline communication between students and administration." android:textColor="#475569" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Help Centre Dropdown -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#F1F5F9"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F8FAFC"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewHelp"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Help Centre (FAQs)"
+                        android:textAllCaps="false"
+                        android:textColor="#334155"
+                        android:gravity="start|center_vertical"
+                        app:icon="@drawable/ic_chevron_right"
+                        app:iconGravity="textEnd" />
+                    <LinearLayout
+                        android:id="@+id/layoutHelpDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <TextView
+                            android:text="Q: What is the purpose of this application?\nA: This application enables authorized campus users to report, track, and manage maintenance-related issues efficiently.\n\nQ: Who can use this application?\nA: The application is intended for students, faculty, staff, and other authorized personnel within the campus.\n\nQ: How do I submit a maintenance request?\nA: Users can submit a request by selecting the relevant category, providing a description of the issue, and submitting it through the app interface.\n\nQ: How can I track the status of my request?\nA: Users can view the progress and status updates of their submitted requests within the “My Requests” or similar section of the application.\n\nQ: How long does it take to resolve an issue?\nA: Resolution times may vary depending on the nature, complexity, and priority of the request. The application does not guarantee immediate resolution.\n\nQ: What should I do if I submitted incorrect information?\nA: Users should update or resubmit the request with accurate information, or contact the support team if editing is not available.\n\nQ: Is my personal information secure?\nA: The application implements reasonable security measures to protect user data. For more details, please refer to the Privacy Policy.\n\nQ: Can I report multiple issues at once?\nA: Users are encouraged to submit separate requests for each issue to ensure proper tracking and resolution.\n\nQ: What happens if I misuse the application?\nA: Misuse, including false reporting or inappropriate behavior, may result in restriction or termination of access.\n\nQ: Who do I contact for support or technical issues?\nA: Users can contact the designated support team through the “Support” section within the application."
+                            android:textColor="#475569"
+                            android:textSize="12sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Terms Dropdown -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#F1F5F9"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F8FAFC"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewTerms"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Terms &amp; Conditions"
+                        android:textAllCaps="false"
+                        android:textColor="#334155"
+                        android:gravity="start|center_vertical"
+                        app:icon="@drawable/ic_chevron_right"
+                        app:iconGravity="textEnd" />
+                    <LinearLayout
+                        android:id="@+id/layoutTermsDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <TextView
+                            android:text="1. Use of Service: This app is intended for students, staff, and authorized personnel to report and track campus maintenance issues.\n\n2. User Responsibility: Users must provide accurate and genuine information while submitting maintenance requests.\n\n3. Prohibited Activities: Misuse of the app, including false complaints, spam, or abusive content, is strictly prohibited.\n\n4. Request Handling: All maintenance requests will be reviewed and processed based on priority and availability of resources.\n\n5. No Guarantee of Immediate Service: The app does not guarantee instant resolution of reported issues.\n\n6. Account Security: Users are responsible for maintaining the confidentiality of their login credentials.\n\n7. Data Usage: The app may collect basic user data to improve services and track maintenance requests.\n\n8. Modification of Services: The app administrators reserve the right to update or modify features without prior notice.\n\n9. Limitation of Liability: The app is not liable for delays, damages, or losses caused by maintenance issues or service interruptions.\n\n10. Termination of Access: The app may suspend or terminate access for users who violate these terms."
+                            android:textColor="#475569"
+                            android:textSize="12sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Rate Us Button -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#F1F5F9"
+                app:strokeWidth="1dp">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRateUs"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Rate Our App"
+                    android:textAllCaps="false"
+                    android:textColor="#334155"
+                    android:gravity="start|center_vertical"
+                    app:icon="@android:drawable/btn_star"
+                    app:iconGravity="textEnd" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDrawerLogout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#FEF2F2"
+        android:text="Logout Session"
+        android:textAllCaps="false"
+        android:textColor="#EF4444"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_logout"
+        app:iconGravity="textStart"
+        app:iconTint="#EF4444"
+        app:strokeColor="#FEE2E2"
+        app:strokeWidth="1dp" />
+
+</LinearLayout>
