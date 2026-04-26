@@ -19,7 +19,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/ticketCategory"
+                android:id="@+id/tvCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Plumbing"
@@ -28,11 +28,21 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/ticketStatus"
+                android:id="@+id/tvTicketId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvCategory"
+                android:text="#SR000000"
+                android:textColor="#78909C"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvStatusBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/status_pending_bg"
+                android:background="@drawable/bg_status_pending"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="4dp"
                 android:text="Pending"
@@ -42,7 +52,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/ticketLocation"
+            android:id="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -51,7 +61,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/ticketDescription"
+            android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -60,7 +70,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/ticketAssigned"
+            android:id="@+id/tvAssignedStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

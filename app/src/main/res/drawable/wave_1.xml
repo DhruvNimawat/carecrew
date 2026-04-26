@@ -1,14 +1,18 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="400dp"
-    android:height="220dp"
+    android:height="120dp"
     android:viewportWidth="400"
-    android:viewportHeight="220">
+    android:viewportHeight="120">
 
+    <!-- Secondary Wave (Semi-transparent White) -->
     <path
-        android:fillColor="#9EB1F0"
-        android:pathData="M0,120
-                          Q100,170 200,140
-                          Q300,110 400,160
-                          L400,220
-                          L0,220 Z"/>
+        android:fillAlpha="0.4"
+        android:fillColor="#FFFFFF"
+        android:pathData="M0,40 C150,130 250,0 400,40 L400,120 L0,120 Z" />
+
+    <!-- Main Wave (Solid White) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M0,70 C100,120 300,20 400,70 L400,120 L0,120 Z" />
+
 </vector>

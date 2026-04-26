@@ -71,7 +71,7 @@ public class TicketCenterActivity extends AppCompatActivity {
             intent.putExtra("floor", complaint.floor);
             intent.putExtra("roomNumber", complaint.roomNumber);
             intent.putExtra("priority", complaint.priority);
-            intent.putExtra("timestamp", complaint.timestamp);
+            intent.putExtra("timestamp", complaint.getTimestampString());
             intent.putExtra("assignedTo", complaint.assignedTo);
             startActivity(intent);
         });

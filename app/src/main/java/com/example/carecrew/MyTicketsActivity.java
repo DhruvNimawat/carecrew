@@ -1,5 +1,6 @@
 package com.example.carecrew;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -29,7 +30,9 @@ public class MyTicketsActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
+    private View tabIndicator;
     private MaterialButton btnAll, btnPending, btnInProgress, btnCompleted;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,52 +45,111 @@ public class MyTicketsActivity extends AppCompatActivity {
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         
         allTickets = new ArrayList<>();
-        ticketAdapter = new TicketAdapter(allTickets, this::showReviewDialog);
+        ticketAdapter = new TicketAdapter(allTickets, this::onTicketClicked);
         ticketsRecyclerView.setAdapter(ticketAdapter);
 
+        tabIndicator = findViewById(R.id.tabIndicator);
         setupFilterButtons();
         fetchTickets();
+        applyEntranceAnimations();
+
+        // Position indicator initially on "All"
+        btnAll.post(() -> {
+            moveIndicator(btnAll, false);
+            btnAll.setTextColor(getResources().getColor(R.color.primary_blue));
+        });
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
     }
 
-    private void showReviewDialog(Complaint complaint) {
-        if (!"Completed".equalsIgnoreCase(complaint.status) && !"Resolved".equalsIgnoreCase(complaint.status)) {
-            // If not completed, maybe show details instead (original behavior)
-            return;
-        }
+    private void moveIndicator(MaterialButton target, boolean animate) {
+        if (target == null || tabIndicator == null) return;
 
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_review, null);
-        RatingBar ratingBar = dialogView.findViewById(R.id.reviewRatingBar);
-        TextInputEditText etComment = dialogView.findViewById(R.id.etReviewComment);
+        target.post(() -> {
+            float textWidth = target.getPaint().measureText(target.getText().toString());
+            
+            // Add extra horizontal padding specifically for the "All" tab to make it slightly wider
+            int horizontalPadding = (target.getId() == R.id.tabAll) ? 120 : 48;
+            
+            int indicatorWidth = (int) textWidth + horizontalPadding;
+            int indicatorHeight = (int) (target.getHeight() * 0.75f);
 
-        new AlertDialog.Builder(this)
-                .setView(dialogView)
-                .setPositiveButton("Submit", (dialog, which) -> {
-                    float rating = ratingBar.getRating();
-                    String comment = etComment.getText().toString();
-                    submitReview(complaint, rating, comment);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+            float targetX = target.getX() + (target.getWidth() - indicatorWidth) / 2f;
+            float targetY = target.getY() + (target.getHeight() - indicatorHeight) / 2f;
+
+            if (animate) {
+                tabIndicator.animate()
+                        .x(targetX)
+                        .y(targetY)
+                        .setDuration(300)
+                        .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
+                        .start();
+
+                android.animation.ValueAnimator widthAnim = android.animation.ValueAnimator.ofInt(tabIndicator.getWidth(), indicatorWidth);
+                widthAnim.addUpdateListener(animation -> {
+                    tabIndicator.getLayoutParams().width = (int) animation.getAnimatedValue();
+                    tabIndicator.requestLayout();
+                });
+                widthAnim.setDuration(300);
+                widthAnim.start();
+
+                android.animation.ValueAnimator heightAnim = android.animation.ValueAnimator.ofInt(tabIndicator.getHeight(), indicatorHeight);
+                heightAnim.addUpdateListener(animation -> {
+                    tabIndicator.getLayoutParams().height = (int) animation.getAnimatedValue();
+                    tabIndicator.requestLayout();
+                });
+                heightAnim.setDuration(300);
+                heightAnim.start();
+            } else {
+                tabIndicator.setX(targetX);
+                tabIndicator.setY(targetY);
+                tabIndicator.getLayoutParams().width = indicatorWidth;
+                tabIndicator.getLayoutParams().height = indicatorHeight;
+                tabIndicator.requestLayout();
+            }
+        });
     }
 
-    private void submitReview(Complaint complaint, float rating, String comment) {
-        DatabaseReference reviewRef = FirebaseDatabase.getInstance().getReference().child("Reviews").push();
+    private void applyEntranceAnimations() {
+        View header = findViewById(R.id.headerBackground);
+        View title = findViewById(R.id.screenTitle);
+        View tabs = findViewById(R.id.tabsScroll);
         
-        java.util.Map<String, Object> reviewData = new java.util.HashMap<>();
-        reviewData.put("complaintId", complaint.id);
-        reviewData.put("userId", complaint.userId);
-        reviewData.put("assignedTo", complaint.assignedTo);
-        reviewData.put("rating", rating);
-        reviewData.put("comment", comment);
-        reviewData.put("timestamp", System.currentTimeMillis());
+        header.setTranslationY(-200f);
+        header.animate().translationY(0).setDuration(600).start();
 
-        reviewRef.setValue(reviewData).addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "Review submitted! Thank you.", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to submit review.", Toast.LENGTH_SHORT).show();
-        });
+        title.setAlpha(0f);
+        title.setTranslationX(-50f);
+        title.animate().alpha(1f).translationX(0).setDuration(500).setStartDelay(200).start();
+
+        if (tabs != null) {
+            tabs.setAlpha(0f);
+            tabs.setTranslationY(50f);
+            tabs.animate().alpha(1f).translationY(0).setDuration(500).setStartDelay(400).start();
+        }
+    }
+
+    private void onTicketClicked(Complaint complaint) {
+        Intent intent = new Intent(this, ComplaintDetailsActivity.class);
+        intent.putExtra("id", complaint.id);
+        intent.putExtra("category", complaint.category);
+        intent.putExtra("status", complaint.status);
+        intent.putExtra("description", complaint.description);
+        intent.putExtra("block", complaint.block);
+        intent.putExtra("floor", complaint.floor);
+        intent.putExtra("roomNumber", complaint.roomNumber);
+        intent.putExtra("priority", complaint.priority);
+        intent.putExtra("assignedTo", complaint.assignedTo);
+        intent.putExtra("userId", complaint.userId);
+
+        // Pass timestamp as string
+        String ts = "N/A";
+        if (complaint.timestamp != null) {
+            ts = complaint.timestamp.toString();
+        }
+        intent.putExtra("timestamp", ts);
+
+        startActivity(intent);
     }
 
     private void setupFilterButtons() {
@@ -96,10 +158,10 @@ public class MyTicketsActivity extends AppCompatActivity {
         btnInProgress = findViewById(R.id.tabInProgress);
         btnCompleted = findViewById(R.id.tabCompleted);
 
-        btnAll.setOnClickListener(v -> filterTickets("All"));
-        btnPending.setOnClickListener(v -> filterTickets("Pending"));
-        btnInProgress.setOnClickListener(v -> filterTickets("In Progress"));
-        btnCompleted.setOnClickListener(v -> filterTickets("Completed"));
+        btnAll.setOnClickListener(v -> filterTickets("All", btnAll));
+        btnPending.setOnClickListener(v -> filterTickets("Pending", btnPending));
+        btnInProgress.setOnClickListener(v -> filterTickets("In Progress", btnInProgress));
+        btnCompleted.setOnClickListener(v -> filterTickets("Completed", btnCompleted));
     }
 
     private void fetchTickets() {
@@ -126,31 +188,19 @@ public class MyTicketsActivity extends AppCompatActivity {
         });
     }
 
-    private void filterTickets(String status) {
-        // Reset button styles (simplified for now)
+    private void filterTickets(String status, MaterialButton clickedButton) {
+        moveIndicator(clickedButton, true);
         resetButtonStyles();
+        clickedButton.setTextColor(getResources().getColor(R.color.primary_blue));
         
         List<Complaint> filteredList = new ArrayList<>();
         if ("All".equals(status)) {
             filteredList = allTickets;
-            btnAll.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
-            btnAll.setTextColor(getResources().getColor(R.color.dark_blue));
         } else {
             for (Complaint t : allTickets) {
                 if (status.equalsIgnoreCase(t.status)) {
                     filteredList.add(t);
                 }
-            }
-            // Update active button color
-            if ("Pending".equals(status)) {
-                btnPending.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
-                btnPending.setTextColor(getResources().getColor(R.color.dark_blue));
-            } else if ("In Progress".equals(status)) {
-                btnInProgress.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
-                btnInProgress.setTextColor(getResources().getColor(R.color.dark_blue));
-            } else if ("Completed".equals(status)) {
-                btnCompleted.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
-                btnCompleted.setTextColor(getResources().getColor(R.color.dark_blue));
             }
         }
         ticketAdapter.updateList(filteredList);
@@ -159,7 +209,6 @@ public class MyTicketsActivity extends AppCompatActivity {
     private void resetButtonStyles() {
         MaterialButton[] buttons = {btnAll, btnPending, btnInProgress, btnCompleted};
         for (MaterialButton b : buttons) {
-            b.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT));
             b.setTextColor(android.graphics.Color.parseColor("#CCFFFFFF"));
         }
     }

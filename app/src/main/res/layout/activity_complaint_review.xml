@@ -197,7 +197,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginTop="32dp"
-                        android:backgroundTint="@color/dark_blue"
+                        android:backgroundTint="@color/primary_blue"
                         android:text="Submit Complaint"
                         android:textAllCaps="false"
                         android:textColor="#FFFFFF"
@@ -212,7 +212,7 @@
                         android:layout_marginTop="8dp"
                         android:text="Edit Details"
                         android:textAllCaps="false"
-                        android:textColor="@color/dark_blue" />
+                        android:textColor="@color/primary_blue" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

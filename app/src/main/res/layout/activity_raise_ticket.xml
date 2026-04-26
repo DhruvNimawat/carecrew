@@ -7,31 +7,45 @@
     android:background="#F8FBFF"
     tools:context=".RaiseTicketActivity">
 
-    <!-- Header -->
+    <!-- Top Curvy Blue Header -->
     <View
         android:id="@+id/headerBg"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="#6C5CE7"
+        android:layout_height="220dp"
+        android:background="@drawable/gradient_header_blue"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/headerCurve"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="-1dp"
+        android:rotation="180"
+        android:scaleType="fitXY"
+        android:src="@drawable/wave_3"
+        app:layout_constraintTop_toBottomOf="@id/headerBg"
+        app:tint="#1565C0"
+        android:contentDescription="Header wave" />
 
     <LinearLayout
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_logout"
-            android:rotation="180"
+            android:src="@drawable/ic_back"
             app:tint="#FFFFFF" />
 
         <TextView
@@ -45,26 +59,39 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvHeaderTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
         android:text="Raise New Ticket"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/headerBg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/headerBg" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Submit a new maintenance request"
+        android:textColor="#E3F2FD"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHeaderTitle" />
 
     <!-- Form Content -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="-20dp"
+        android:layout_marginTop="180dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
-        app:layout_constraintTop_toBottomOf="@id/headerBg">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"

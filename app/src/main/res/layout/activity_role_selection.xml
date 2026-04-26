@@ -33,12 +33,11 @@
     <!-- GRID CONTAINER -->
 
     <View
-        android:id="@+id/logoPlaceholder"
+        android:id="@+id/mainLogo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,7 +48,7 @@
         android:layout_marginTop="96dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/logoPlaceholder"
+        app:layout_constraintTop_toBottomOf="@id/mainLogo"
         tools:layout_editor_absoluteX="16dp">
 
         <TextView
@@ -61,7 +60,7 @@
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="4"
-            android:text="Choose Your Identity"
+            android:text="@string/role_selection_title"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -71,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="How will you use Care Crew today?"
+            android:text="@string/role_selection_subtitle"
             android:textAlignment="center"
             android:textColor="#E3F2FD"
             android:textSize="14sp" />
@@ -96,7 +95,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardStudent"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
@@ -107,7 +106,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:gravity="center">
@@ -118,10 +117,11 @@
                         android:src="@drawable/student_icon"
                         android:padding="8dp"
                         android:background="@drawable/ic_launcher_background"
-                        android:backgroundTint="#E3F2FD"/>
+                        android:backgroundTint="#E3F2FD"
+                        android:contentDescription="@string/role_user" />
 
                     <TextView
-                        android:text="User"
+                        android:text="@string/role_user"
                         android:textColor="@color/role_student"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -132,7 +132,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Report issues"
+                        android:text="@string/role_user_desc"
                         android:textColor="@color/text_desc"
                         android:textSize="12sp"
                         android:layout_marginTop="4dp"/>
@@ -142,7 +142,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardAdmin"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
@@ -153,7 +153,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:gravity="center">
@@ -164,10 +164,11 @@
                         android:src="@drawable/img_1"
                         android:padding="8dp"
                         android:background="@drawable/ic_launcher_background"
-                        android:backgroundTint="#FFEBEE"/>
+                        android:backgroundTint="#FFEBEE"
+                        android:contentDescription="@string/role_admin" />
 
                     <TextView
-                        android:text="Admin"
+                        android:text="@string/role_admin"
                         android:textColor="@color/role_admin"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -178,7 +179,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Full Control"
+                        android:text="@string/role_admin_desc"
                         android:textColor="@color/text_desc"
                         android:textSize="12sp"
                         android:layout_marginTop="4dp"/>
@@ -195,7 +196,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardStaff"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
@@ -206,7 +207,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:gravity="center">
@@ -217,10 +218,11 @@
                         android:src="@drawable/img"
                         android:padding="8dp"
                         android:background="@drawable/ic_launcher_background"
-                        android:backgroundTint="#E8F5E9"/>
+                        android:backgroundTint="#E8F5E9"
+                        android:contentDescription="@string/role_staff" />
 
                     <TextView
-                        android:text="Staff"
+                        android:text="@string/role_staff"
                         android:textColor="@color/role_staff"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -231,7 +233,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Maintenance"
+                        android:text="@string/role_staff_desc"
                         android:textColor="@color/text_desc"
                         android:textSize="12sp"
                         android:layout_marginTop="4dp"/>
@@ -241,7 +243,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardWarden"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
@@ -252,7 +254,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:gravity="center">
@@ -263,10 +265,11 @@
                         android:src="@drawable/img_2"
                         android:padding="8dp"
                         android:background="@drawable/ic_launcher_background"
-                        android:backgroundTint="#F3E5F5"/>
+                        android:backgroundTint="#F3E5F5"
+                        android:contentDescription="@string/role_warden" />
 
                     <TextView
-                        android:text="Warden"
+                        android:text="@string/role_warden"
                         android:textColor="@color/role_warden"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -277,7 +280,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hostel Care"
+                        android:text="@string/role_warden_desc"
                         android:textColor="@color/text_desc"
                         android:textSize="12sp"
                         android:layout_marginTop="4dp"/>
