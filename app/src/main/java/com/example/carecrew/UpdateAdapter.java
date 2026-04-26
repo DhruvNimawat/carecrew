@@ -29,7 +29,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
         holder.tvUpdateCategory.setText(complaint.category);
         holder.tvUpdateDescription.setText(complaint.description);
         holder.tvUpdateStatus.setText(complaint.status);
-        holder.tvUpdateTimestamp.setText(complaint.timestamp);
+        holder.tvUpdateTimestamp.setText(complaint.getTimestampString());
 
         // Color status tag safely
         int color = 0xFF888888; // Default Grey

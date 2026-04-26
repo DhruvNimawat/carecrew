@@ -82,7 +82,7 @@ public class ComplaintReviewActivity extends AppCompatActivity {
                 priority,
                 "Pending",
                 imageUrl,
-                String.valueOf(timestamp)
+                timestamp
         );
 
         if (complaintId != null) {
