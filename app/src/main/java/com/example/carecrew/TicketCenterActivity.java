@@ -64,6 +64,7 @@ public class TicketCenterActivity extends AppCompatActivity {
         fullTicketList = new ArrayList<>();
         ticketAdapter = new TicketAdapter(ticketList, complaint -> {
             Intent intent = new Intent(TicketCenterActivity.this, ComplaintDetailsActivity.class);
+            intent.putExtra("id", complaint.id);
             intent.putExtra("category", complaint.category);
             intent.putExtra("status", complaint.status);
             intent.putExtra("description", complaint.description);
@@ -184,6 +185,10 @@ public class TicketCenterActivity extends AppCompatActivity {
                     Complaint ticket = ticketSnapshot.getValue(Complaint.class);
                     if (ticket == null) continue;
 
+                    if (ticket.id == null || ticket.id.isEmpty()) {
+                        ticket.id = ticketSnapshot.getKey();
+                    }
+
                     // Add to list
                     fullTicketList.add(ticket);
 
@@ -207,8 +212,22 @@ public class TicketCenterActivity extends AppCompatActivity {
                             break;
                         case "delayed":
                         case "overdue":
-                            delayed++;
+                            // We don't increment delayed here, we'll calculate it below
                             break;
+                    }
+                }
+
+                // Calculate delayed tickets (unassigned for > 48 hours)
+                long currentTime = System.currentTimeMillis();
+                long fortyEightHours = 48 * 60 * 60 * 1000L;
+                for (Complaint ticket : fullTicketList) {
+                    long ticketTimestamp = ticket.getTimestampLong();
+                    if (ticketTimestamp == 0) continue;
+                    long age = currentTime - ticketTimestamp;
+                    boolean isUnassigned = (ticket.assignedTo == null || ticket.assignedTo.isEmpty());
+                    boolean isNotCompleted = (ticket.status == null || (!ticket.status.equalsIgnoreCase("Completed") && !ticket.status.equalsIgnoreCase("Resolved") && !ticket.status.equalsIgnoreCase("Closed")));
+                    if (age >= fortyEightHours && isUnassigned && isNotCompleted) {
+                        delayed++;
                     }
                 }
 
@@ -239,6 +258,14 @@ public class TicketCenterActivity extends AppCompatActivity {
         if (cardUnassigned != null) cardUnassigned.setOnClickListener(v -> filterByStatus("unassigned"));
         if (cardAssigned != null) cardAssigned.setOnClickListener(v -> filterByStatus("assigned"));
         if (cardCompleted != null) cardCompleted.setOnClickListener(v -> filterByStatus("completed"));
+
+        View btnStaffAllocation = findViewById(R.id.btnStaffAllocation);
+        if (btnStaffAllocation != null) {
+            btnStaffAllocation.setOnClickListener(v -> {
+                filterByStatus("unassigned");
+                tvRecentTicketsHeader.setText("Staff Allocation (Unassigned)");
+            });
+        }
 
         CardView cardDelayed = findViewById(R.id.cardDelayed);
         if (cardDelayed != null) {
@@ -281,7 +308,6 @@ public class TicketCenterActivity extends AppCompatActivity {
     private void showDelayedTickets() {
         List<Complaint> delayedTickets = new ArrayList<>();
         long currentTime = System.currentTimeMillis();
-        long twentyFourHours = 24 * 60 * 60 * 1000L;
         long fortyEightHours = 48 * 60 * 60 * 1000L;
 
         for (Complaint ticket : fullTicketList) {
@@ -289,25 +315,25 @@ public class TicketCenterActivity extends AppCompatActivity {
             if (ticketTimestamp == 0) continue;
             
             long age = currentTime - ticketTimestamp;
-            // Overdue by 24h to 48h and not assigned
-            boolean isDelayed = (age >= twentyFourHours && age <= fortyEightHours);
+            // Overdue if not assigned for more than 48 hours
+            boolean isOverdue = (age >= fortyEightHours);
             boolean isUnassigned = (ticket.assignedTo == null || ticket.assignedTo.isEmpty());
-            boolean isNotCompleted = (ticket.status == null || !ticket.status.equalsIgnoreCase("Completed"));
+            boolean isNotCompleted = (ticket.status == null || (!ticket.status.equalsIgnoreCase("Completed") && !ticket.status.equalsIgnoreCase("Resolved") && !ticket.status.equalsIgnoreCase("Closed")));
 
-            if (isDelayed && isUnassigned && isNotCompleted) {
+            if (isOverdue && isUnassigned && isNotCompleted) {
                 delayedTickets.add(ticket);
             }
         }
 
         if (delayedTickets.isEmpty()) {
-            Toast.makeText(this, "No tickets in the 24h-48h window", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No tickets overdue (> 48h unassigned)", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Display them
         layoutOtherOptions.setVisibility(View.GONE);
         tvRecentTicketsHeader.setVisibility(View.VISIBLE);
-        tvRecentTicketsHeader.setText("Overdue (24h - 48h)");
+        tvRecentTicketsHeader.setText("Maintenance Overdue (>48h)");
         if (tvSubtitle != null) tvSubtitle.setVisibility(View.GONE);
         
         ticketList.clear();
@@ -315,7 +341,7 @@ public class TicketCenterActivity extends AppCompatActivity {
         ticketAdapter.notifyDataSetChanged();
         
         etSearch.setText(""); // Clear search to avoid confusion
-        Toast.makeText(this, "Showing " + delayedTickets.size() + " unassigned overdue tickets", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Showing " + delayedTickets.size() + " overdue tickets", Toast.LENGTH_SHORT).show();
     }
 
     private void showToast(String message) {

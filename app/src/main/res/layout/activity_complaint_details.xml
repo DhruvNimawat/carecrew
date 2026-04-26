@@ -209,6 +209,16 @@
                         app:cornerRadius="12dp"
                         android:backgroundTint="@color/primary_blue"/>
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAllocateStaff"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Allocate Staff"
+                        android:visibility="gone"
+                        app:cornerRadius="12dp"
+                        android:backgroundTint="#FF9800"/>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

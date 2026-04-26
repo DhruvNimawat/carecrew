@@ -299,7 +299,7 @@ public class WardenDashboard extends AppCompatActivity {
         String email = mAuth.getCurrentUser().getEmail();
         String emailKey = email != null ? email.replace(".", ",") : "unknown";
         
-        if (tvUserID != null) tvUserID.setText("ID: " + email);
+        if (tvUserID != null) tvUserID.setText(getString(R.string.user_id_label_format, email));
         
         FirebaseDatabase.getInstance().getReference().child("Users").child(emailKey)
             .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -320,8 +320,8 @@ public class WardenDashboard extends AppCompatActivity {
                                 tvWelcome.setText(getString(R.string.welcome_user_format, firstName));
                             }
                         }
-                        if (tvDrawerEmail != null) tvDrawerEmail.setText("Email: " + email);
-                        if (tvDrawerHostel != null) tvDrawerHostel.setText("Hostel: " + wardenHostel);
+                        if (tvDrawerEmail != null) tvDrawerEmail.setText(getString(R.string.email_label_format, email));
+                        if (tvDrawerHostel != null) tvDrawerHostel.setText(getString(R.string.hostel_label_format, wardenHostel));
 
                         loadComplaints();
                     }

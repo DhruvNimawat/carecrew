@@ -27,6 +27,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class StaffReviewsActivity extends AppCompatActivity {
 
     private RecyclerView rvStaffReviews;
@@ -37,6 +42,7 @@ public class StaffReviewsActivity extends AppCompatActivity {
     private StaffAdapter adapter;
     private List<StaffModel> staffList = new ArrayList<>();
     private List<StaffModel> filteredList = new ArrayList<>();
+    private List<ReviewModel> allReviews = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,18 +77,50 @@ public class StaffReviewsActivity extends AppCompatActivity {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     StaffModel staff = ds.getValue(StaffModel.class);
                     if (staff != null) {
-                        // Assuming reviews might be stored under each staff or a separate Reviews node
-                        // For now, setting dummy values or fetching from a child node if it exists
-                        float rating = ds.hasChild("avgRating") ? ds.child("avgRating").getValue(Float.class) : 0f;
-                        int reviewCount = ds.hasChild("reviewCount") ? ds.child("reviewCount").getValue(Integer.class) : 0;
-                        staff.setAvgRating(rating);
-                        staff.setReviewCount(reviewCount);
                         staffList.add(staff);
                     }
                 }
-                updateList(staffList);
-                progressBar.setVisibility(View.GONE);
-                tvNoData.setVisibility(staffList.isEmpty() ? View.VISIBLE : View.GONE);
+                
+                // Fetch reviews for each staff
+                mDatabase.child("Reviews").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot reviewSnapshot) {
+                        allReviews.clear();
+                        for (DataSnapshot rs : reviewSnapshot.getChildren()) {
+                            ReviewModel review = rs.getValue(ReviewModel.class);
+                            if (review != null) {
+                                allReviews.add(review);
+                            }
+                        }
+
+                        for (StaffModel staff : staffList) {
+                            float totalRating = 0;
+                            int count = 0;
+                            for (ReviewModel review : allReviews) {
+                                if (staff.getEmail() != null && staff.getEmail().equals(review.getAssignedTo())) {
+                                    totalRating += review.getRating();
+                                    count++;
+                                }
+                            }
+                            if (count > 0) {
+                                staff.setAvgRating(totalRating / count);
+                                staff.setReviewCount(count);
+                            } else {
+                                staff.setAvgRating(0f);
+                                staff.setReviewCount(0);
+                            }
+                        }
+                        updateList(staffList);
+                        progressBar.setVisibility(View.GONE);
+                        tvNoData.setVisibility(staffList.isEmpty() ? View.VISIBLE : View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        updateList(staffList);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
             }
 
             @Override
@@ -124,6 +162,89 @@ public class StaffReviewsActivity extends AppCompatActivity {
         filteredList.addAll(list);
         adapter.notifyDataSetChanged();
         tvNoData.setVisibility(filteredList.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    private void showFeedbacksDialog(StaffModel staff) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_staff_feedbacks, null);
+        TextView tvTitle = dialogView.findViewById(R.id.tvDialogStaffName);
+        RecyclerView rvFeedbacks = dialogView.findViewById(R.id.rvFeedbacks);
+        TextView tvNoFeedbacks = dialogView.findViewById(R.id.tvNoFeedbacks);
+
+        tvTitle.setText(staff.getName() + "'s Feedbacks");
+
+        List<ReviewModel> staffFeedbacks = new ArrayList<>();
+        for (ReviewModel review : allReviews) {
+            if (staff.getEmail() != null && staff.getEmail().equals(review.getAssignedTo())) {
+                staffFeedbacks.add(review);
+            }
+        }
+
+        if (staffFeedbacks.isEmpty()) {
+            tvNoFeedbacks.setVisibility(View.VISIBLE);
+            rvFeedbacks.setVisibility(View.GONE);
+        } else {
+            tvNoFeedbacks.setVisibility(View.GONE);
+            rvFeedbacks.setVisibility(View.VISIBLE);
+            rvFeedbacks.setLayoutManager(new LinearLayoutManager(this));
+            rvFeedbacks.setAdapter(new FeedbackAdapter(staffFeedbacks));
+        }
+
+        new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setPositiveButton("Close", null)
+                .show();
+    }
+
+    // Model for Reviews
+    public static class ReviewModel {
+        private String assignedTo, comment, userId;
+        private float rating;
+        private long timestamp;
+
+        public ReviewModel() {}
+
+        public String getAssignedTo() { return assignedTo; }
+        public String getComment() { return comment; }
+        public float getRating() { return rating; }
+        public long getTimestamp() { return timestamp; }
+    }
+
+    // Inner Adapter for Feedbacks
+    private class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.ViewHolder> {
+        private List<ReviewModel> reviews;
+        private SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+
+        public FeedbackAdapter(List<ReviewModel> reviews) { this.reviews = reviews; }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feedback, parent, false);
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            ReviewModel review = reviews.get(position);
+            holder.ratingBar.setRating(review.getRating());
+            holder.tvComment.setText(review.getComment() != null && !review.getComment().isEmpty() ? review.getComment() : "No comment provided.");
+            holder.tvDate.setText(sdf.format(new Date(review.getTimestamp())));
+        }
+
+        @Override
+        public int getItemCount() { return reviews.size(); }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            RatingBar ratingBar;
+            TextView tvComment, tvDate;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                ratingBar = itemView.findViewById(R.id.feedbackRatingBar);
+                tvComment = itemView.findViewById(R.id.tvFeedbackComment);
+                tvDate = itemView.findViewById(R.id.tvFeedbackDate);
+            }
+        }
     }
 
     // Inner Model Class
@@ -168,7 +289,7 @@ public class StaffReviewsActivity extends AppCompatActivity {
             holder.tvReviews.setText("(" + staff.getReviewCount() + " reviews)");
 
             holder.itemView.setOnClickListener(v -> {
-                Toast.makeText(StaffReviewsActivity.this, "No reviews available for " + staff.getName() + " yet.", Toast.LENGTH_SHORT).show();
+                showFeedbacksDialog(staff);
             });
         }
 
