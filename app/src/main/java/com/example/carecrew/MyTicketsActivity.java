@@ -16,6 +16,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
+import android.widget.RatingBar;
+import com.google.android.material.textfield.TextInputEditText;
+
 public class MyTicketsActivity extends AppCompatActivity {
 
     private RecyclerView ticketsRecyclerView;
@@ -37,13 +41,52 @@ public class MyTicketsActivity extends AppCompatActivity {
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         
         allTickets = new ArrayList<>();
-        ticketAdapter = new TicketAdapter(allTickets);
+        ticketAdapter = new TicketAdapter(allTickets, this::showReviewDialog);
         ticketsRecyclerView.setAdapter(ticketAdapter);
 
         setupFilterButtons();
         fetchTickets();
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+    }
+
+    private void showReviewDialog(Complaint complaint) {
+        if (!"Completed".equalsIgnoreCase(complaint.status) && !"Resolved".equalsIgnoreCase(complaint.status)) {
+            // If not completed, maybe show details instead (original behavior)
+            return;
+        }
+
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_review, null);
+        RatingBar ratingBar = dialogView.findViewById(R.id.reviewRatingBar);
+        TextInputEditText etComment = dialogView.findViewById(R.id.etReviewComment);
+
+        new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setPositiveButton("Submit", (dialog, which) -> {
+                    float rating = ratingBar.getRating();
+                    String comment = etComment.getText().toString();
+                    submitReview(complaint, rating, comment);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void submitReview(Complaint complaint, float rating, String comment) {
+        DatabaseReference reviewRef = FirebaseDatabase.getInstance().getReference().child("Reviews").push();
+        
+        java.util.Map<String, Object> reviewData = new java.util.HashMap<>();
+        reviewData.put("complaintId", complaint.id);
+        reviewData.put("userId", complaint.userId);
+        reviewData.put("assignedTo", complaint.assignedTo);
+        reviewData.put("rating", rating);
+        reviewData.put("comment", comment);
+        reviewData.put("timestamp", System.currentTimeMillis());
+
+        reviewRef.setValue(reviewData).addOnSuccessListener(aVoid -> {
+            Toast.makeText(this, "Review submitted! Thank you.", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed to submit review.", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void setupFilterButtons() {
