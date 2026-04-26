@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class RaiseTicketActivity extends AppCompatActivity {
 
-    private Spinner spinnerCategory, spinnerBuilding;
+    private Spinner spinnerCategory;
     private TextInputEditText etTitle, etDescription;
     private RadioGroup rgPriority;
     private DatabaseReference mDatabase;
@@ -35,7 +35,6 @@ public class RaiseTicketActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         spinnerCategory = findViewById(R.id.spinnerCategory);
-        spinnerBuilding = findViewById(R.id.spinnerBuilding);
         etTitle = findViewById(R.id.etTitle);
         etDescription = findViewById(R.id.etDescription);
         rgPriority = findViewById(R.id.rgPriority);
@@ -47,7 +46,6 @@ public class RaiseTicketActivity extends AppCompatActivity {
 
     private void submitTicket() {
         String category = spinnerCategory.getSelectedItem().toString();
-        String building = spinnerBuilding.getSelectedItem().toString();
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         
@@ -62,21 +60,20 @@ public class RaiseTicketActivity extends AppCompatActivity {
 
         if (mAuth.getCurrentUser() == null) return;
         String userEmail = mAuth.getCurrentUser().getEmail();
-        String ticketId = mDatabase.child("complaints").push().getKey();
+        String ticketId = mDatabase.child("Tickets").push().getKey();
 
         Map<String, Object> ticket = new HashMap<>();
-        ticket.put("id", ticketId);
-        ticket.put("userId", mAuth.getCurrentUser().getUid());
+        ticket.put("ticketId", ticketId);
+        ticket.put("userEmail", userEmail);
         ticket.put("category", category);
-        ticket.put("block", building);
+        ticket.put("title", title);
         ticket.put("description", description);
         ticket.put("priority", priority);
         ticket.put("status", "Open");
-        ticket.put("timestamp", String.valueOf(System.currentTimeMillis()));
-        ticket.put("title", title);
+        ticket.put("timestamp", System.currentTimeMillis());
 
         if (ticketId != null) {
-            mDatabase.child("complaints").child(ticketId).setValue(ticket)
+            mDatabase.child("Tickets").child(ticketId).setValue(ticket)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(RaiseTicketActivity.this, "Ticket raised successfully!", Toast.LENGTH_SHORT).show();
                     finish();

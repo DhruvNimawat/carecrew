@@ -1,6 +1,5 @@
 package com.example.carecrew;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -77,9 +76,9 @@ public class StaffLoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 Toast.makeText(this, "Staff Login Successful!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(StaffLoginActivity.this, StaffDashboard.class);
-                                startActivity(intent);
-                                finish();
+                                // TODO: Navigate to StaffDashboardActivity
+                                // startActivity(new Intent(StaffLoginActivity.this, StaffDashboardActivity.class));
+                                // finish();
                             } else {
                                 Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
                             }

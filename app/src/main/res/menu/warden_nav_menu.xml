@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="Settings" />
+
+    <item
+        android:id="@+id/nav_rate_us"
+        android:icon="@android:drawable/btn_star"
+        android:title="Rate Us" />
+
+    <item
+        android:id="@+id/nav_help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Help Centre" />
+
+    <item
+        android:id="@+id/nav_terms"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="Terms and Conditions" />
+</menu>

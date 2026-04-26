@@ -67,7 +67,8 @@ public class ComplaintReviewActivity extends AppCompatActivity {
 
     private void submitComplaint() {
         String complaintId = mDatabase.child("complaints").push().getKey();
-        String userId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "anonymous";
+        String email = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getEmail() : null;
+        String userId = (email != null) ? email.replace(".", ",") : "anonymous";
         long timestamp = System.currentTimeMillis();
 
         Complaint complaint = new Complaint(

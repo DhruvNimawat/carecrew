@@ -15,11 +15,10 @@ import com.google.firebase.database.ValueEventListener;
 
 public class UserDashboardActivity extends AppCompatActivity {
 
-    private TextView totalTicketsText, tvPendingCount, tvInProgressCount, tvUrgentCount, welcomeTitle;
+    private TextView totalTicketsText, tvPendingCount, tvInProgressCount, tvUrgentCount;
     private TextView tvAnnouncementTitle, tvAnnouncementMessage;
     private DatabaseReference mDatabase;
     private DatabaseReference mAnnouncementsRef;
-    private DatabaseReference mUsersRef;
     private FirebaseAuth mAuth;
 
     @Override
@@ -30,9 +29,7 @@ public class UserDashboardActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("complaints");
         mAnnouncementsRef = FirebaseDatabase.getInstance().getReference().child("Announcements");
-        mUsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        welcomeTitle = findViewById(R.id.welcomeTitle);
         totalTicketsText = findViewById(R.id.userLocation);
         tvPendingCount = findViewById(R.id.tvPendingCount);
         tvInProgressCount = findViewById(R.id.tvInProgressCount);
@@ -41,12 +38,16 @@ public class UserDashboardActivity extends AppCompatActivity {
         tvAnnouncementTitle = findViewById(R.id.tvAnnouncementTitle);
         tvAnnouncementMessage = findViewById(R.id.tvAnnouncementMessage);
 
+        // Fix for Potential Crashes: Check if views are null
+        if (tvAnnouncementTitle == null || tvAnnouncementMessage == null) {
+            // Log or handle the error
+        }
+
         CardView cardRaiseComplaint = findViewById(R.id.cardRaiseComplaint);
         CardView cardMyTickets = findViewById(R.id.cardMyTickets);
         CardView cardUpdates = findViewById(R.id.cardUpdates);
         CardView cardProfile = findViewById(R.id.cardProfile);
 
-        fetchUserName();
         updateStats();
         listenForAnnouncements();
 
@@ -64,7 +65,7 @@ public class UserDashboardActivity extends AppCompatActivity {
 
         if (cardUpdates != null) {
             cardUpdates.setOnClickListener(v -> 
-                startActivity(new Intent(UserDashboardActivity.this, RecentUpdatesActivity.class))
+                android.widget.Toast.makeText(this, "Recent Updates coming soon!", android.widget.Toast.LENGTH_SHORT).show()
             );
         }
 
@@ -83,30 +84,6 @@ public class UserDashboardActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             });
-        }
-    }
-
-    private void fetchUserName() {
-        if (mAuth.getCurrentUser() != null) {
-            String email = mAuth.getCurrentUser().getEmail();
-            if (email != null) {
-                String emailKey = email.replace(".", ",");
-                mUsersRef.child(emailKey).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            String fullName = snapshot.getValue(String.class);
-                            if (fullName != null && !fullName.isEmpty()) {
-                                String firstName = fullName.split(" ")[0];
-                                welcomeTitle.setText(getString(R.string.welcome_user_format, firstName));
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
-                });
-            }
         }
     }
 
@@ -139,7 +116,8 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     private void updateStats() {
         if (mAuth.getCurrentUser() == null) return;
-        String userId = mAuth.getCurrentUser().getUid();
+        String email = mAuth.getCurrentUser().getEmail();
+        String userId = email != null ? email.replace(".", ",") : "anonymous";
         
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override

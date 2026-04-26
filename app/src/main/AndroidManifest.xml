@@ -73,9 +73,6 @@
             android:name=".RaiseTicketActivity"
             android:exported="false" />
         <activity
-            android:name=".RecentUpdatesActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

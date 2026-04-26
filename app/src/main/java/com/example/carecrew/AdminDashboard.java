@@ -40,7 +40,7 @@ public class AdminDashboard extends AppCompatActivity {
         tvActiveStaff = findViewById(R.id.tvActiveStaff);
         tvSystemAlerts = findViewById(R.id.tvSystemAlerts);
         tvAdminGreeting = findViewById(R.id.tvAdminGreeting);
-
+        
         // Initialize Buttons
         btnLogout = findViewById(R.id.btnLogout);
         actionAddStaff = findViewById(R.id.actionAddStaff);
@@ -125,7 +125,7 @@ public class AdminDashboard extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 tvTotalUsers.setText(String.valueOf(snapshot.getChildrenCount()));
-
+                
                 // Active Staff count (example: users with role 'staff')
                 long staffCount = 0;
                 for (DataSnapshot user : snapshot.getChildren()) {
@@ -139,13 +139,13 @@ public class AdminDashboard extends AppCompatActivity {
         });
 
         // Open Tickets
-        mDatabase.child("complaints").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Tickets").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int openCount = 0;
                 for (DataSnapshot ticket : snapshot.getChildren()) {
                     String status = ticket.child("status").getValue(String.class);
-                    if ("Open".equalsIgnoreCase(status) || "Pending".equalsIgnoreCase(status) || "In Progress".equalsIgnoreCase(status)) {
+                    if ("Open".equalsIgnoreCase(status) || "Pending".equalsIgnoreCase(status)) {
                         openCount++;
                     }
                 }

@@ -12,7 +12,7 @@
         android:id="@+id/headerBackground"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/primary_blue"
+        android:background="@color/dark_blue"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Back Button -->
@@ -23,7 +23,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:src="@android:drawable/ic_menu_revert"
-        android:contentDescription="@string/desc_back"
+        android:contentDescription="Back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="#FFFFFF" />
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="@string/title_select_location"
+        android:text="Select Location"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:text="@string/subtitle_location_step"
+        android:text="Step 3: Where is the issue?"
         android:textColor="#CCFFFFFF"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,11 +80,11 @@
                     android:orientation="vertical"
                     android:padding="24dp">
 
-                    <!-- Building / Hostel -->
+                    <!-- Hostel Block -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_building_hostel"
+                        android:text="Hostel Block"
                         android:textColor="#78909C"
                         android:textSize="14sp" />
 
@@ -103,7 +103,7 @@
                             android:id="@+id/blockDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/hint_select_building"
+                            android:hint="Select Block"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -112,7 +112,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="@string/label_floor"
+                        android:text="Floor"
                         android:textColor="#78909C"
                         android:textSize="14sp" />
 
@@ -131,7 +131,7 @@
                             android:id="@+id/floorDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/hint_select_floor"
+                            android:hint="Select Floor"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,7 +140,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="@string/label_room_number"
+                        android:text="Room Number"
                         android:textColor="#78909C"
                         android:textSize="14sp" />
 
@@ -159,7 +159,7 @@
                             android:id="@+id/roomEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/hint_enter_room_no"
+                            android:hint="Enter Room No."
                             android:inputType="text" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -170,7 +170,7 @@
                         android:layout_height="60dp"
                         android:layout_marginTop="32dp"
                         android:backgroundTint="@color/dark_blue"
-                        android:text="@string/btn_continue"
+                        android:text="Continue"
                         android:textAllCaps="false"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
