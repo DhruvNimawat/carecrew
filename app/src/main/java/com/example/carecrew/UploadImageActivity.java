@@ -4,9 +4,14 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
@@ -65,6 +70,11 @@ public class UploadImageActivity extends AppCompatActivity {
         description = getIntent().getStringExtra("description");
 
         ivPreview = findViewById(R.id.ivPreview);
+        ivPreview.setOnClickListener(v -> {
+            if (imageUri != null) {
+                showFullScreenPreview();
+            }
+        });
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
@@ -97,5 +107,20 @@ public class UploadImageActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         cameraLauncher.launch(intent);
+    }
+
+    private void showFullScreenPreview() {
+        Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_full_screen_image);
+        
+        ImageView fullScreenImage = dialog.findViewById(R.id.fullScreenImageView);
+        ImageView btnClose = dialog.findViewById(R.id.btnClosePreview);
+        
+        fullScreenImage.setImageURI(imageUri);
+        
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+        
+        dialog.show();
     }
 }

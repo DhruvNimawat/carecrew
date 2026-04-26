@@ -1,5 +1,6 @@
 package com.example.carecrew;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -44,7 +45,7 @@ public class MyTicketsActivity extends AppCompatActivity {
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         
         allTickets = new ArrayList<>();
-        ticketAdapter = new TicketAdapter(allTickets, this::showReviewDialog);
+        ticketAdapter = new TicketAdapter(allTickets, this::onTicketClicked);
         ticketsRecyclerView.setAdapter(ticketAdapter);
 
         tabIndicator = findViewById(R.id.tabIndicator);
@@ -128,42 +129,27 @@ public class MyTicketsActivity extends AppCompatActivity {
         }
     }
 
-    private void showReviewDialog(Complaint complaint) {
-        if (!"Completed".equalsIgnoreCase(complaint.status) && !"Resolved".equalsIgnoreCase(complaint.status)) {
-            return;
+    private void onTicketClicked(Complaint complaint) {
+        Intent intent = new Intent(this, ComplaintDetailsActivity.class);
+        intent.putExtra("id", complaint.id);
+        intent.putExtra("category", complaint.category);
+        intent.putExtra("status", complaint.status);
+        intent.putExtra("description", complaint.description);
+        intent.putExtra("block", complaint.block);
+        intent.putExtra("floor", complaint.floor);
+        intent.putExtra("roomNumber", complaint.roomNumber);
+        intent.putExtra("priority", complaint.priority);
+        intent.putExtra("assignedTo", complaint.assignedTo);
+        intent.putExtra("userId", complaint.userId);
+
+        // Pass timestamp as string
+        String ts = "N/A";
+        if (complaint.timestamp != null) {
+            ts = complaint.timestamp.toString();
         }
+        intent.putExtra("timestamp", ts);
 
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_review, null);
-        RatingBar ratingBar = dialogView.findViewById(R.id.reviewRatingBar);
-        TextInputEditText etComment = dialogView.findViewById(R.id.etReviewComment);
-
-        new AlertDialog.Builder(this)
-                .setView(dialogView)
-                .setPositiveButton("Submit", (dialog, which) -> {
-                    float rating = ratingBar.getRating();
-                    String comment = etComment.getText().toString();
-                    submitReview(complaint, rating, comment);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    private void submitReview(Complaint complaint, float rating, String comment) {
-        DatabaseReference reviewRef = FirebaseDatabase.getInstance().getReference().child("Reviews").push();
-        
-        java.util.Map<String, Object> reviewData = new java.util.HashMap<>();
-        reviewData.put("complaintId", complaint.id);
-        reviewData.put("userId", complaint.userId);
-        reviewData.put("assignedTo", complaint.assignedTo);
-        reviewData.put("rating", rating);
-        reviewData.put("comment", comment);
-        reviewData.put("timestamp", System.currentTimeMillis());
-
-        reviewRef.setValue(reviewData).addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "Review submitted! Thank you.", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to submit review.", Toast.LENGTH_SHORT).show();
-        });
+        startActivity(intent);
     }
 
     private void setupFilterButtons() {

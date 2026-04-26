@@ -199,6 +199,16 @@
                         android:textColor="#334155"
                         android:textSize="14sp" />
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSubmitReviewDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="Submit Review"
+                        android:visibility="gone"
+                        app:cornerRadius="12dp"
+                        android:backgroundTint="@color/primary_blue"/>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

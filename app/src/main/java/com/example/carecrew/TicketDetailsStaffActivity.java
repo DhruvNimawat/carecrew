@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -93,8 +94,9 @@ public class TicketDetailsStaffActivity extends AppCompatActivity {
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
             imagePlaceholder.setVisibility(View.GONE);
-            // In a real app, use Glide or Picasso to load imageUrl into ivComplaintImage
-            // Glide.with(this).load(imageUrl).into(ivComplaintImage);
+            Glide.with(this).load(imageUrl).into(ivComplaintImage);
+            
+            ivComplaintImage.setOnClickListener(v -> showFullScreenPreview(imageUrl));
         } else {
             imagePlaceholder.setVisibility(View.VISIBLE);
         }
@@ -120,6 +122,21 @@ public class TicketDetailsStaffActivity extends AppCompatActivity {
                     finish();
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, getString(R.string.toast_failed_accept), Toast.LENGTH_SHORT).show());
+    }
+
+    private void showFullScreenPreview(String imageUrl) {
+        android.app.Dialog dialog = new android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_full_screen_image);
+
+        ImageView fullScreenImage = dialog.findViewById(R.id.fullScreenImageView);
+        ImageView btnClose = dialog.findViewById(R.id.btnClosePreview);
+
+        Glide.with(this).load(imageUrl).into(fullScreenImage);
+
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     private void rejectJob() {
