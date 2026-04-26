@@ -74,6 +74,7 @@ public class UserDashboardActivity extends AppCompatActivity {
         updateStats();
         listenForAnnouncements();
         fetchUserName();
+        applyEntranceAnimations();
 
         if (cardRaiseComplaint != null) {
             cardRaiseComplaint.setOnClickListener(v -> 
@@ -98,6 +99,51 @@ public class UserDashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(UserDashboardActivity.this, ProfileDetailsActivity.class))
             );
         }
+    }
+
+    private void applyEntranceAnimations() {
+        View headerBg = findViewById(R.id.headerBackground);
+        View welcomeTitle = findViewById(R.id.welcomeTitle);
+        View welcomeSubtitle = findViewById(R.id.welcomeSubtitle);
+        View statsCard = findViewById(R.id.statsCard);
+        View actionGrid = findViewById(R.id.actionGrid);
+        View announcementCard = findViewById(R.id.announcementCard);
+
+        // Header slide down
+        headerBg.setTranslationY(-200f);
+        headerBg.animate().translationY(0).setDuration(800).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+
+        // Welcome text fade and slide
+        welcomeTitle.setAlpha(0f);
+        welcomeTitle.setTranslationX(-50f);
+        welcomeTitle.animate().alpha(1f).translationX(0).setDuration(600).setStartDelay(300).start();
+
+        welcomeSubtitle.setAlpha(0f);
+        welcomeSubtitle.setTranslationX(-50f);
+        welcomeSubtitle.animate().alpha(1f).translationX(0).setDuration(600).setStartDelay(400).start();
+
+        // Stats Card Pop
+        statsCard.setAlpha(0f);
+        statsCard.setScaleX(0.9f);
+        statsCard.setScaleY(0.9f);
+        statsCard.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(600).setStartDelay(500).setInterpolator(new android.view.animation.OvershootInterpolator()).start();
+
+        // Action Buttons staggered pop
+        if (actionGrid instanceof android.view.ViewGroup) {
+            android.view.ViewGroup grid = (android.view.ViewGroup) actionGrid;
+            for (int i = 0; i < grid.getChildCount(); i++) {
+                View child = grid.getChildAt(i);
+                child.setAlpha(0f);
+                child.setScaleX(0.8f);
+                child.setScaleY(0.8f);
+                child.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(500).setStartDelay(700 + (i * 100)).setInterpolator(new android.view.animation.OvershootInterpolator()).start();
+            }
+        }
+
+        // Announcement Card slide up
+        announcementCard.setAlpha(0f);
+        announcementCard.setTranslationY(100f);
+        announcementCard.animate().alpha(1f).translationY(0).setDuration(700).setStartDelay(1100).start();
     }
 
     private void setupDrawer() {

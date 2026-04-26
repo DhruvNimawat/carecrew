@@ -119,11 +119,20 @@ public class MainActivity extends AppCompatActivity {
         View[] cards = {cardStudent, cardAdmin, cardStaff, cardWarden};
         for (int i = 0; i < cards.length; i++) {
             final View card = cards[i];
-            card.setVisibility(View.INVISIBLE);
-            handler.postDelayed(() -> {
-                card.setVisibility(View.VISIBLE);
-                card.startAnimation(popIn);
-            }, 600 + (i * 150));
+            card.setAlpha(0f);
+            card.setTranslationY(100f);
+            card.setScaleX(0.85f);
+            card.setScaleY(0.85f);
+            
+            card.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(700)
+                    .setStartDelay(800 + (i * 120))
+                    .setInterpolator(new android.view.animation.OvershootInterpolator(1.2f))
+                    .start();
         }
 
         setupClickListeners(roleView);

@@ -43,6 +43,17 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         holder.assigned.setText(holder.itemView.getContext().getString(R.string.ticket_assigned_format, 
             (ticket.assignedTo != null && !ticket.assignedTo.isEmpty()) ? ticket.assignedTo : "Not Assigned"));
 
+        // Entrance animation for items
+        holder.itemView.setAlpha(0f);
+        holder.itemView.setTranslationY(100f);
+        holder.itemView.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(500)
+                .setStartDelay(position * 50L)
+                .setInterpolator(new android.view.animation.DecelerateInterpolator())
+                .start();
+
         // Show "Submit Review" only for Completed tickets
         if ("Completed".equalsIgnoreCase(ticket.status) || "Resolved".equalsIgnoreCase(ticket.status)) {
             holder.btnSubmitReview.setVisibility(View.VISIBLE);
