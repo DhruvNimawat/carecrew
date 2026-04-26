@@ -96,31 +96,21 @@ public class MainActivity extends AppCompatActivity {
                     .y(targetLocation[1])
                     .scaleX(0.83f) // 100dp / 120dp approx
                     .scaleY(0.83f)
-                    .alpha(1.0f)
-                    .setDuration(800)
-                    .setInterpolator(new android.view.animation.PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f)) // Standard easing
+                    .setDuration(1000)
+                    .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
                     .start();
         });
 
-        // Animate other elements with a small delay for smoothness
+        // Animate other elements
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         Animation topDown = AnimationUtils.loadAnimation(this, R.anim.top_down);
         Animation popIn = AnimationUtils.loadAnimation(this, R.anim.pop_in);
 
-        topHeaderBg.setVisibility(View.INVISIBLE);
-        headerCurve.setVisibility(View.INVISIBLE);
-        headerTextSection.setVisibility(View.INVISIBLE);
+        topHeaderBg.startAnimation(topDown);
+        headerCurve.startAnimation(topDown);
+        headerTextSection.startAnimation(fadeIn);
 
-        handler.postDelayed(() -> {
-            topHeaderBg.setVisibility(View.VISIBLE);
-            headerCurve.setVisibility(View.VISIBLE);
-            headerTextSection.setVisibility(View.VISIBLE);
-            topHeaderBg.startAnimation(topDown);
-            headerCurve.startAnimation(topDown);
-            headerTextSection.startAnimation(fadeIn);
-        }, 300);
-
-        // Staggered animation for cards using ViewPropertyAnimator for much smoother transitions
+        // Staggered animation for cards
         CardView cardStudent = roleView.findViewById(R.id.cardStudent);
         CardView cardAdmin = roleView.findViewById(R.id.cardAdmin);
         CardView cardStaff = roleView.findViewById(R.id.cardStaff);
@@ -129,23 +119,11 @@ public class MainActivity extends AppCompatActivity {
         View[] cards = {cardStudent, cardAdmin, cardStaff, cardWarden};
         for (int i = 0; i < cards.length; i++) {
             final View card = cards[i];
-            
-            // Set initial hidden state
-            card.setAlpha(0f);
-            card.setTranslationY(80f);
-            card.setScaleX(0.92f);
-            card.setScaleY(0.92f);
-            
-            // Animate each card with a staggered delay and smooth overshoot
-            card.animate()
-                    .alpha(1f)
-                    .translationY(0f)
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .setDuration(700)
-                    .setStartDelay(900 + (i * 120)) // Start after logo animation is mostly done
-                    .setInterpolator(new android.view.animation.OvershootInterpolator(1.1f))
-                    .start();
+            card.setVisibility(View.INVISIBLE);
+            handler.postDelayed(() -> {
+                card.setVisibility(View.VISIBLE);
+                card.startAnimation(popIn);
+            }, 600 + (i * 150));
         }
 
         setupClickListeners(roleView);

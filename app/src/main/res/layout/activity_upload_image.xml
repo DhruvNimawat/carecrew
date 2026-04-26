@@ -12,7 +12,7 @@
         android:id="@+id/headerBackground"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/primary_blue"
+        android:background="@color/dark_blue"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Back Button -->
@@ -23,7 +23,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:src="@android:drawable/ic_menu_revert"
-        android:contentDescription="@string/desc_back"
+        android:contentDescription="Back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="#FFFFFF" />
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="@string/title_upload_evidence"
+        android:text="Upload Evidence"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:text="@string/subtitle_upload_step"
+        android:text="Step 2: Add Photos"
         android:textColor="#CCFFFFFF"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,14 +89,13 @@
                         android:src="@android:drawable/ic_menu_camera"
                         app:tint="#B0BEC5"
                         android:background="#ECEFF1"
-                        android:padding="40dp"
-                        android:contentDescription="@string/btn_select_image" />
+                        android:padding="40dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="@string/desc_upload_instruction"
+                        android:text="Take a photo or select from gallery\nto help us understand the issue better."
                         android:gravity="center"
                         android:textColor="#78909C"
                         android:textSize="14sp" />
@@ -107,7 +106,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginTop="24dp"
-                        android:text="@string/btn_select_image"
+                        android:text="Select Image"
                         android:textAllCaps="false"
                         android:textColor="@color/dark_blue"
                         app:cornerRadius="16dp"
@@ -119,8 +118,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginTop="16dp"
-                        android:backgroundTint="@color/primary_blue"
-                        android:text="@string/btn_continue"
+                        android:backgroundTint="@color/dark_blue"
+                        android:text="Continue"
                         android:textAllCaps="false"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"

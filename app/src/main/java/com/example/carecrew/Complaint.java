@@ -13,8 +13,6 @@ public class Complaint {
     public String imageUrl;
     public String timestamp;
     public String assignedTo;
-    public float rating;
-    public String review;
 
     public Complaint() {
         // Required for Firebase
@@ -37,12 +35,6 @@ public class Complaint {
     public Complaint(String id, String userId, String category, String description, String block, String floor, String roomNumber, String priority, String status, String imageUrl, String timestamp, String assignedTo) {
         this(id, userId, category, description, block, floor, roomNumber, priority, status, imageUrl, timestamp);
         this.assignedTo = assignedTo;
-    }
-
-    public Complaint(String id, String userId, String category, String description, String block, String floor, String roomNumber, String priority, String status, String imageUrl, String timestamp, String assignedTo, float rating, String review) {
-        this(id, userId, category, description, block, floor, roomNumber, priority, status, imageUrl, timestamp, assignedTo);
-        this.rating = rating;
-        this.review = review;
     }
 
     public long getTimestampLong() {

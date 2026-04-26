@@ -340,24 +340,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/tvListTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="12dp"
-                android:text="All Tickets"
-                android:textColor="#1E293B"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvTickets"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/item_ticket" />
-
             <!-- Quick Actions -->
             <TextView
                 android:layout_width="wrap_content"

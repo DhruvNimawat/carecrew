@@ -1,6 +1,5 @@
 package com.example.carecrew;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -26,8 +25,6 @@ public class MyTicketsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private MaterialButton btnAll, btnPending, btnInProgress, btnCompleted;
-    private String currentFilter = "All";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,29 +37,11 @@ public class MyTicketsActivity extends AppCompatActivity {
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         
         allTickets = new ArrayList<>();
-        ticketAdapter = new TicketAdapter(allTickets, complaint -> {
-            Intent intent = new Intent(MyTicketsActivity.this, ComplaintDetailsActivity.class);
-            intent.putExtra("id", complaint.id);
-            intent.putExtra("category", complaint.category);
-            intent.putExtra("status", complaint.status);
-            intent.putExtra("description", complaint.description);
-            intent.putExtra("block", complaint.block);
-            intent.putExtra("floor", complaint.floor);
-            intent.putExtra("roomNumber", complaint.roomNumber);
-            intent.putExtra("priority", complaint.priority);
-            intent.putExtra("timestamp", complaint.timestamp);
-            intent.putExtra("assignedTo", complaint.assignedTo);
-            intent.putExtra("rating", complaint.rating);
-            intent.putExtra("review", complaint.review);
-            startActivity(intent);
-        });
+        ticketAdapter = new TicketAdapter(allTickets);
         ticketsRecyclerView.setAdapter(ticketAdapter);
 
         setupFilterButtons();
         fetchTickets();
-        
-        // Set initial state
-        filterTickets("All");
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
     }
@@ -80,7 +59,8 @@ public class MyTicketsActivity extends AppCompatActivity {
     }
 
     private void fetchTickets() {
-        String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "anonymous";
+        String email = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getEmail() : null;
+        String currentUserId = email != null ? email.replace(".", ",") : "anonymous";
         
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -92,7 +72,7 @@ public class MyTicketsActivity extends AppCompatActivity {
                         allTickets.add(ticket);
                     }
                 }
-                filterTickets(currentFilter);
+                ticketAdapter.updateList(allTickets);
             }
 
             @Override
@@ -103,39 +83,39 @@ public class MyTicketsActivity extends AppCompatActivity {
     }
 
     private void filterTickets(String status) {
-        currentFilter = status;
+        // Reset button styles (simplified for now)
         resetButtonStyles();
         
         List<Complaint> filteredList = new ArrayList<>();
-        MaterialButton selectedButton = btnAll;
-
         if ("All".equals(status)) {
-            filteredList = new ArrayList<>(allTickets);
-            selectedButton = btnAll;
+            filteredList = allTickets;
+            btnAll.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
+            btnAll.setTextColor(getResources().getColor(R.color.dark_blue));
         } else {
             for (Complaint t : allTickets) {
                 if (status.equalsIgnoreCase(t.status)) {
                     filteredList.add(t);
                 }
             }
-            if ("Pending".equals(status)) selectedButton = btnPending;
-            else if ("In Progress".equals(status)) selectedButton = btnInProgress;
-            else if ("Completed".equals(status)) selectedButton = btnCompleted;
+            // Update active button color
+            if ("Pending".equals(status)) {
+                btnPending.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
+                btnPending.setTextColor(getResources().getColor(R.color.dark_blue));
+            } else if ("In Progress".equals(status)) {
+                btnInProgress.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
+                btnInProgress.setTextColor(getResources().getColor(R.color.dark_blue));
+            } else if ("Completed".equals(status)) {
+                btnCompleted.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
+                btnCompleted.setTextColor(getResources().getColor(R.color.dark_blue));
+            }
         }
-
-        // Highlight selected button
-        selectedButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
-        selectedButton.setTextColor(getResources().getColor(R.color.dark_blue));
-
         ticketAdapter.updateList(filteredList);
     }
 
     private void resetButtonStyles() {
         MaterialButton[] buttons = {btnAll, btnPending, btnInProgress, btnCompleted};
         for (MaterialButton b : buttons) {
-            // Use setBackgroundTintList with null to clear the solid white background
-            // or use a transparent color if that's preferred.
-            b.setBackgroundTintList(null);
+            b.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT));
             b.setTextColor(android.graphics.Color.parseColor("#CCFFFFFF"));
         }
     }

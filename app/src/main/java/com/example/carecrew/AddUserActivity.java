@@ -51,8 +51,6 @@ public class AddUserActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
 
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-
         btnAddUser.setOnClickListener(v -> registerUser());
     }
 
