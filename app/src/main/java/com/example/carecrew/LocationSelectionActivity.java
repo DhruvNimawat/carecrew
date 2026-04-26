@@ -26,16 +26,21 @@ public class LocationSelectionActivity extends AppCompatActivity {
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         // Setup Block Dropdown
-        String[] blocks = {"Block A", "Block B", "Block C", "Block D"};
+        String[] blocks = {
+            "GA Building", "GB Building", "NB", "Bhagat Singh", 
+            "Vikram Sarabhai", "Ratan Tata", "APJ Abdul Kalam", 
+            "Kalpana Chawla", "Gargi", "Workshop"
+        };
         blockDropdown = findViewById(R.id.blockDropdown);
         ArrayAdapter<String> blockAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, blocks);
         blockDropdown.setAdapter(blockAdapter);
 
-        // Setup Floor Dropdown
-        String[] floors = {"Ground Floor", "1st Floor", "2nd Floor", "3rd Floor"};
         floorDropdown = findViewById(R.id.floorDropdown);
-        ArrayAdapter<String> floorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, floors);
-        floorDropdown.setAdapter(floorAdapter);
+
+        blockDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedBlock = blocks[position];
+            updateFloorDropdown(selectedBlock);
+        });
 
         roomEditText = findViewById(R.id.roomEditText);
 
@@ -50,5 +55,43 @@ public class LocationSelectionActivity extends AppCompatActivity {
             intent.putExtra("roomNumber", roomEditText.getText().toString());
             startActivity(intent);
         });
+    }
+
+    private void updateFloorDropdown(String block) {
+        java.util.List<String> floors = new java.util.ArrayList<>();
+        
+        if (block.equals("GA Building") || block.equals("GB Building")) {
+            floors.add("LG");
+            floors.add("UG");
+            for (int i = 1; i <= 3; i++) floors.add(getOrdinal(i) + " Floor");
+        } else if (block.equals("NB")) {
+            floors.add("Ground Floor");
+            for (int i = 1; i <= 4; i++) floors.add(getOrdinal(i) + " Floor");
+        } else if (block.equals("Bhagat Singh") || block.equals("Ratan Tata") || block.equals("Kalpana Chawla")) {
+            for (int i = 1; i <= 14; i++) floors.add(getOrdinal(i) + " Floor");
+        } else if (block.equals("Vikram Sarabhai") || block.equals("Gargi")) {
+            for (int i = 1; i <= 10; i++) floors.add(getOrdinal(i) + " Floor");
+        } else if (block.equals("APJ Abdul Kalam")) {
+            for (int i = 1; i <= 8; i++) floors.add(getOrdinal(i) + " Floor");
+        } else if (block.equals("Workshop")) {
+            floors.add("Ground Floor");
+            floors.add("1st Floor");
+        }
+
+        ArrayAdapter<String> floorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, floors);
+        floorDropdown.setAdapter(floorAdapter);
+        floorDropdown.setText("", false); // Clear previous selection
+    }
+
+    private String getOrdinal(int i) {
+        String[] suffixes = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+        switch (i % 100) {
+            case 11:
+            case 12:
+            case 13:
+                return i + "th";
+            default:
+                return i + suffixes[i % 10];
+        }
     }
 }

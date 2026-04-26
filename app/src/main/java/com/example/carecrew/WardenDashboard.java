@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +40,7 @@ public class WardenDashboard extends AppCompatActivity {
     
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private com.google.android.material.button.MaterialButton btnFilterPending, btnFilterUrgent, btnFilterResolved, btnFilterAll;
+    private MaterialButton btnFilterPending, btnFilterUrgent, btnFilterResolved, btnFilterAll;
     private View headerView;
     private TextView tvDrawerName, tvDrawerEmail, tvDrawerHostel, tvUserID;
     private View layoutProfileDetails;
@@ -165,20 +166,62 @@ public class WardenDashboard extends AppCompatActivity {
     }
 
     private void setupNavigationDrawer() {
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_settings) {
-                showAppDetailsDialog();
-            } else if (id == R.id.nav_rate_us) {
+        // App Info Dropdown Logic
+        View layoutAppInfoDetails = headerView.findViewById(R.id.layoutAppInfoDetails);
+        MaterialButton btnViewAppInfo = headerView.findViewById(R.id.btnViewAppInfo);
+        if (btnViewAppInfo != null) {
+            btnViewAppInfo.setOnClickListener(v -> {
+                boolean isVisible = layoutAppInfoDetails.getVisibility() == View.VISIBLE;
+                layoutAppInfoDetails.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                btnViewAppInfo.setIconResource(isVisible ? R.drawable.ic_chevron_right : R.drawable.ic_back);
+            });
+        }
+
+        // Help Centre Dropdown Logic
+        MaterialButton btnViewHelp = headerView.findViewById(R.id.btnViewHelp);
+        View layoutHelpDetails = headerView.findViewById(R.id.layoutHelpDetails);
+        if (btnViewHelp != null) {
+            btnViewHelp.setOnClickListener(v -> {
+                boolean isVisible = layoutHelpDetails.getVisibility() == View.VISIBLE;
+                layoutHelpDetails.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                btnViewHelp.setIconResource(isVisible ? R.drawable.ic_chevron_right : R.drawable.ic_back);
+            });
+        }
+
+        // Terms Dropdown Logic
+        MaterialButton btnViewTerms = headerView.findViewById(R.id.btnViewTerms);
+        View layoutTermsDetails = headerView.findViewById(R.id.layoutTermsDetails);
+        if (btnViewTerms != null) {
+            btnViewTerms.setOnClickListener(v -> {
+                boolean isVisible = layoutTermsDetails.getVisibility() == View.VISIBLE;
+                layoutTermsDetails.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                btnViewTerms.setIconResource(isVisible ? R.drawable.ic_chevron_right : R.drawable.ic_back);
+            });
+        }
+
+        // Rate Us Button Logic
+        View btnRateUs = headerView.findViewById(R.id.btnRateUs);
+        if (btnRateUs != null) {
+            btnRateUs.setOnClickListener(v -> {
                 showRateUsDialog();
-            } else if (id == R.id.nav_help) {
-                showFAQDialog();
-            } else if (id == R.id.nav_terms) {
-                showTermsDialog();
-            }
-            drawerLayout.closeDrawer(GravityCompat.END);
-            return true;
-        });
+                drawerLayout.closeDrawer(GravityCompat.END);
+            });
+        }
+
+        // Profile Section Expansion
+        View profileSection = headerView.findViewById(R.id.profileSection);
+        if (profileSection != null) {
+            profileSection.setOnClickListener(v -> {
+                isProfileExpanded = !isProfileExpanded;
+                if (layoutProfileDetails != null) {
+                    layoutProfileDetails.setVisibility(isProfileExpanded ? View.VISIBLE : View.GONE);
+                }
+                MaterialButton btnViewProfile = headerView.findViewById(R.id.btnViewProfile);
+                if (btnViewProfile != null) {
+                    btnViewProfile.setIconResource(isProfileExpanded ? R.drawable.ic_back : R.drawable.ic_chevron_right);
+                }
+            });
+        }
     }
 
     private void showAppDetailsDialog() {
@@ -272,7 +315,10 @@ public class WardenDashboard extends AppCompatActivity {
                         if (name != null) {
                             if (tvDrawerName != null) tvDrawerName.setText(name);
                             TextView tvWelcome = findViewById(R.id.tvWardenWelcome);
-                            if (tvWelcome != null) tvWelcome.setText("Welcome, " + name);
+                            if (tvWelcome != null) {
+                                String firstName = name.split(" ")[0];
+                                tvWelcome.setText(getString(R.string.welcome_user_format, firstName));
+                            }
                         }
                         if (tvDrawerEmail != null) tvDrawerEmail.setText("Email: " + email);
                         if (tvDrawerHostel != null) tvDrawerHostel.setText("Hostel: " + wardenHostel);

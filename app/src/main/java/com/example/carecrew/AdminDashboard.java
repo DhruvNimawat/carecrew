@@ -62,18 +62,25 @@ public class AdminDashboard extends AppCompatActivity {
     private void fetchAdminName() {
         if (mAuth.getCurrentUser() != null) {
             String email = mAuth.getCurrentUser().getEmail();
-            String emailKey = email != null ? email.replace(".", ",") : "unknown";
-            mDatabase.child("Users").child(emailKey).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        String name = snapshot.getValue(String.class);
-                        tvAdminGreeting.setText("Welcome, " + name);
+            if (email != null) {
+                String emailKey = email.replace(".", ",");
+                FirebaseDatabase.getInstance().getReference().child("Users").child(emailKey).child("name")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            String fullName = snapshot.getValue(String.class);
+                            if (fullName != null && !fullName.isEmpty()) {
+                                String firstName = fullName.split(" ")[0];
+                                tvAdminGreeting.setText(getString(R.string.welcome_user_format, firstName));
+                            }
+                        }
                     }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
-            });
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
+            }
         }
     }
 

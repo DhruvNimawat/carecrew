@@ -13,7 +13,7 @@
         android:id="@+id/headerBackground"
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:background="@color/dark_blue"
+        android:background="@color/primary_blue"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- CareCrew Tag -->
@@ -39,7 +39,7 @@
         android:layout_height="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:contentDescription="Logout"
+        android:contentDescription="@string/logout"
         android:src="@android:drawable/ic_lock_power_off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
-        android:text="Welcome, User"
+        android:text="@string/welcome_user_placeholder"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -314,7 +314,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            android:text="Recent\nUpdates"
+                            android:text="@string/recent_updates_label"
                             android:gravity="center"
                             android:textColor="#388E3C"
                             android:textStyle="bold" />

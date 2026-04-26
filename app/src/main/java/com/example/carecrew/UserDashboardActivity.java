@@ -16,7 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 public class UserDashboardActivity extends AppCompatActivity {
 
     private TextView totalTicketsText, tvPendingCount, tvInProgressCount, tvUrgentCount;
-    private TextView tvAnnouncementTitle, tvAnnouncementMessage;
+    private TextView tvAnnouncementTitle, tvAnnouncementMessage, tvWelcome;
     private DatabaseReference mDatabase;
     private DatabaseReference mAnnouncementsRef;
     private FirebaseAuth mAuth;
@@ -34,22 +34,33 @@ public class UserDashboardActivity extends AppCompatActivity {
         tvPendingCount = findViewById(R.id.tvPendingCount);
         tvInProgressCount = findViewById(R.id.tvInProgressCount);
         tvUrgentCount = findViewById(R.id.tvUrgentCount);
+        tvWelcome = findViewById(R.id.welcomeTitle);
         
         tvAnnouncementTitle = findViewById(R.id.tvAnnouncementTitle);
         tvAnnouncementMessage = findViewById(R.id.tvAnnouncementMessage);
 
         // Fix for Potential Crashes: Check if views are null
         if (tvAnnouncementTitle == null || tvAnnouncementMessage == null) {
-            // Log or handle the error
+            return;
         }
 
         CardView cardRaiseComplaint = findViewById(R.id.cardRaiseComplaint);
         CardView cardMyTickets = findViewById(R.id.cardMyTickets);
         CardView cardUpdates = findViewById(R.id.cardUpdates);
         CardView cardProfile = findViewById(R.id.cardProfile);
+        
+        android.view.View btnLogoutTop = findViewById(R.id.btnLogout);
+        if (btnLogoutTop != null) {
+            btnLogoutTop.setOnClickListener(v -> {
+                mAuth.signOut();
+                startActivity(new Intent(UserDashboardActivity.this, MainActivity.class));
+                finish();
+            });
+        }
 
         updateStats();
         listenForAnnouncements();
+        fetchUserName();
 
         if (cardRaiseComplaint != null) {
             cardRaiseComplaint.setOnClickListener(v -> 
@@ -65,7 +76,7 @@ public class UserDashboardActivity extends AppCompatActivity {
 
         if (cardUpdates != null) {
             cardUpdates.setOnClickListener(v -> 
-                android.widget.Toast.makeText(this, "Recent Updates coming soon!", android.widget.Toast.LENGTH_SHORT).show()
+                startActivity(new Intent(UserDashboardActivity.this, RecentUpdatesActivity.class))
             );
         }
 
@@ -74,16 +85,32 @@ public class UserDashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(UserDashboardActivity.this, ProfileDetailsActivity.class))
             );
         }
+    }
 
-        android.view.View btnLogout = findViewById(R.id.btnLogout);
-        if (btnLogout != null) {
-            btnLogout.setOnClickListener(v -> {
-                mAuth.signOut();
-                Intent intent = new Intent(UserDashboardActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            });
+    private void fetchUserName() {
+        if (mAuth.getCurrentUser() != null) {
+            String email = mAuth.getCurrentUser().getEmail();
+            if (email != null) {
+                String emailKey = email.replace(".", ",");
+                FirebaseDatabase.getInstance().getReference().child("Users").child(emailKey).child("name")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    String fullName = snapshot.getValue(String.class);
+                                    if (fullName != null && !fullName.isEmpty()) {
+                                        String firstName = fullName.split(" ")[0];
+                                        if (tvWelcome != null) {
+                                            tvWelcome.setText(getString(R.string.welcome_user_format, firstName));
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {}
+                        });
+            }
         }
     }
 
@@ -104,8 +131,8 @@ public class UserDashboardActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    tvAnnouncementTitle.setText("No Announcements");
-                    tvAnnouncementMessage.setText("Check back later for updates.");
+                    tvAnnouncementTitle.setText(R.string.no_announcements);
+                    tvAnnouncementMessage.setText(R.string.check_back_later);
                 }
             }
 
