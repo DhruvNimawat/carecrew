@@ -58,8 +58,17 @@ public class JobSummaryActivity extends AppCompatActivity {
                     tvClosedAt.setText(ticket.closedAt != null ? ticket.closedAt : "--:--");
                     tvNotes.setText(ticket.repairNotes != null ? ticket.repairNotes : "No notes provided.");
 
-                    if (ticket.completionTimeMillis > 0 && ticket.startTimeMillis > 0) {
-                        long diff = ticket.completionTimeMillis - ticket.startTimeMillis;
+                    long completionTime = 0;
+                    if (ticket.completionTimeMillis instanceof Long) {
+                        completionTime = (Long) ticket.completionTimeMillis;
+                    } else if (ticket.completionTimeMillis instanceof String) {
+                        try {
+                            completionTime = Long.parseLong((String) ticket.completionTimeMillis);
+                        } catch (Exception ignored) {}
+                    }
+
+                    if (completionTime > 0 && ticket.startTimeMillis > 0) {
+                        long diff = completionTime - ticket.startTimeMillis;
                         long minutes = (diff / (1000 * 60));
                         tvTimeTaken.setText("Time taken: " + minutes + " minutes");
                     } else {

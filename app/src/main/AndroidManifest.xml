@@ -18,7 +18,7 @@
             android:name=".RecentUpdatesActivity"
             android:exported="false" />
         <activity
-            android:name=".UserDashboardActivity"
+            android:name=".UserDashboard"
             android:exported="false" />
         <activity
             android:name=".RaiseComplaintActivity"
@@ -79,6 +79,30 @@
             android:exported="false" />
         <activity
             android:name=".RaiseTicketActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AcceptedJobsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AvailableTicketsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CancelJobActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JobCompletionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JobSummaryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JobUpdateStaffActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StaffHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TicketDetailsStaffActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

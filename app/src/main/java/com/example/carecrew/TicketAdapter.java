@@ -36,12 +36,21 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     @Override
     public void onBindViewHolder(@NonNull TicketViewHolder holder, int position) {
         Complaint ticket = ticketList.get(position);
+        
+        // Ticket ID formatting
+        String displayId = ticket.id != null ? ticket.id : "N/A";
+        if (displayId.length() > 6) {
+            displayId = displayId.substring(displayId.length() - 6).toUpperCase();
+        }
+        holder.ticketId.setText(holder.itemView.getContext().getString(R.string.ticket_id_prefix, displayId));
+
         holder.category.setText(ticket.category);
         holder.status.setText(ticket.status);
         holder.location.setText(holder.itemView.getContext().getString(R.string.ticket_room_format, ticket.roomNumber));
         holder.description.setText(ticket.description);
-        holder.assigned.setText(holder.itemView.getContext().getString(R.string.ticket_assigned_format, 
-            (ticket.assignedTo != null && !ticket.assignedTo.isEmpty()) ? ticket.assignedTo : "Not Assigned"));
+        
+        String assignedStaff = (ticket.assignedTo != null && !ticket.assignedTo.isEmpty()) ? ticket.assignedTo : "Not Assigned";
+        holder.assigned.setText(holder.itemView.getContext().getString(R.string.ticket_assigned_format, assignedStaff));
 
         // Entrance animation for items
         holder.itemView.setAlpha(0f);
@@ -73,13 +82,21 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             }
         });
 
-        // Set status color
-        if ("Pending".equalsIgnoreCase(ticket.status)) {
-            holder.status.setBackgroundResource(R.drawable.status_pending_bg);
-        } else if ("In Progress".equalsIgnoreCase(ticket.status)) {
-            holder.status.setBackgroundResource(R.drawable.status_pending_bg); // Replace with appropriate drawable if exists
-        } else if ("Completed".equalsIgnoreCase(ticket.status) || "Resolved".equalsIgnoreCase(ticket.status)) {
-            holder.status.setBackgroundResource(R.drawable.tag_bg); // Using tag_bg for now
+        // Standardized status styling
+        String status = ticket.status != null ? ticket.status : "Pending";
+        holder.status.setTextColor(android.graphics.Color.WHITE);
+
+        if ("Completed".equalsIgnoreCase(status) || "Resolved".equalsIgnoreCase(status)) {
+            holder.status.setBackgroundResource(R.drawable.bg_status_completed_green);
+        } else if ("Cancelled".equalsIgnoreCase(status)) {
+            holder.status.setBackgroundResource(R.drawable.bg_status_cancelled_red);
+        } else if ("In Progress".equalsIgnoreCase(status)) {
+            holder.status.setBackgroundResource(R.drawable.bg_status_inprogress_blue);
+        } else if ("Pending".equalsIgnoreCase(status)) {
+            holder.status.setBackgroundResource(R.drawable.bg_status_pending);
+            holder.status.setTextColor(android.graphics.Color.BLACK);
+        } else {
+            holder.status.setBackgroundResource(R.drawable.bg_status_accepted);
         }
     }
 
@@ -94,16 +111,17 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     }
 
     public static class TicketViewHolder extends RecyclerView.ViewHolder {
-        TextView category, status, location, description, assigned;
+        TextView category, status, location, description, assigned, ticketId;
         View btnSubmitReview;
 
         public TicketViewHolder(@NonNull View itemView) {
             super(itemView);
-            category = itemView.findViewById(R.id.ticketCategory);
-            status = itemView.findViewById(R.id.ticketStatus);
-            location = itemView.findViewById(R.id.ticketLocation);
-            description = itemView.findViewById(R.id.ticketDescription);
-            assigned = itemView.findViewById(R.id.ticketAssigned);
+            category = itemView.findViewById(R.id.tvCategory);
+            status = itemView.findViewById(R.id.tvStatusBadge);
+            location = itemView.findViewById(R.id.tvLocation);
+            description = itemView.findViewById(R.id.tvDescription);
+            assigned = itemView.findViewById(R.id.tvAssignedStatus);
+            ticketId = itemView.findViewById(R.id.tvTicketId);
             btnSubmitReview = itemView.findViewById(R.id.btnSubmitReview);
         }
     }

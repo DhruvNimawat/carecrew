@@ -78,7 +78,7 @@ public class StaffDashboard extends AppCompatActivity {
                         if (name != null && !name.isEmpty()) {
                             name = name.substring(0, 1).toUpperCase() + name.substring(1);
                         }
-                        tvStaffGreeting.setText(getString(R.string.welcome_name_format, name));
+                        tvStaffGreeting.setText(getString(R.string.welcome_user_format, name));
                     }
                 }
                 @Override
@@ -166,7 +166,16 @@ public class StaffDashboard extends AppCompatActivity {
                             }
                             // 3. Completed Today
                             else if (isAssignedToMe && ("Completed".equalsIgnoreCase(status) || "Resolved".equalsIgnoreCase(status))) {
-                                if (ticket.completionTimeMillis >= todayStart) {
+                                long completionTime = 0;
+                                if (ticket.completionTimeMillis instanceof Long) {
+                                    completionTime = (Long) ticket.completionTimeMillis;
+                                } else if (ticket.completionTimeMillis instanceof String) {
+                                    try {
+                                        completionTime = Long.parseLong((String) ticket.completionTimeMillis);
+                                    } catch (Exception ignored) {}
+                                }
+
+                                if (completionTime >= todayStart) {
                                     completedToday++;
                                 }
                             }

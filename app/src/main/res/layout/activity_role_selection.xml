@@ -95,7 +95,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardStudent"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
@@ -106,7 +106,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:gravity="center">
@@ -142,7 +142,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardAdmin"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
@@ -153,7 +153,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:gravity="center">
@@ -196,7 +196,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardStaff"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
@@ -207,7 +207,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:gravity="center">
@@ -243,7 +243,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardWarden"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
@@ -254,7 +254,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:gravity="center">

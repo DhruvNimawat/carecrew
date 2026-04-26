@@ -16,6 +16,18 @@ public class Complaint {
     public Object completionTimeMillis; // Added to handle missing field warnings
     public Object rating; // Added to handle missing field warnings
     public String staffName; // Added to handle missing field warnings
+    public String userName; // Added to handle field from AcceptedJobAdapter
+    public String startWorkImageUrl;
+    public String afterRepairImageUrl;
+    public long startTimeMillis;
+    public String closedAt;
+    public String repairNotes;
+    public String cancelledBy;
+    public String cancelReason;
+    public String userEmail;
+    public String title;
+    public String ticketId;
+    public long timestampLong;
 
     public Complaint() {
         // Required for Firebase
@@ -40,6 +52,7 @@ public class Complaint {
         this.assignedTo = assignedTo;
     }
 
+    @com.google.firebase.database.Exclude
     public String getTimestampString() {
         if (timestamp instanceof String) {
             return (String) timestamp;
@@ -49,12 +62,13 @@ public class Complaint {
         return "";
     }
 
+    @com.google.firebase.database.Exclude
     public long getTimestampLong() {
-        if (timestamp == null) return 0;
+        if (timestamp == null) return timestampLong;
         if (timestamp instanceof Long) return (Long) timestamp;
         if (timestamp instanceof String) {
             String ts = (String) timestamp;
-            if (ts.isEmpty()) return 0;
+            if (ts.isEmpty()) return timestampLong;
             try {
                 return Long.parseLong(ts);
             } catch (NumberFormatException e) {
@@ -67,6 +81,6 @@ public class Complaint {
                 }
             }
         }
-        return 0;
+        return timestampLong;
     }
 }

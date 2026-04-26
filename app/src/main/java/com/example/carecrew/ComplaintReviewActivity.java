@@ -111,7 +111,7 @@ public class ComplaintReviewActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(this, "Ticket Submitted Successfully!", Toast.LENGTH_LONG).show();
                             finishAffinity();
-                            startActivity(new android.content.Intent(this, UserDashboardActivity.class));
+                            startActivity(new android.content.Intent(this, UserDashboard.class));
                         } else {
                             Toast.makeText(this, "Submission failed: " + (task.getException() != null ? task.getException().getMessage() : ""), Toast.LENGTH_SHORT).show();
                         }
