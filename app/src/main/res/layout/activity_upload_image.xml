@@ -100,17 +100,40 @@
                         android:textColor="#78909C"
                         android:textSize="14sp" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnCapture"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text="Select Image"
-                        android:textAllCaps="false"
-                        android:textColor="@color/dark_blue"
-                        app:cornerRadius="16dp"
-                        app:strokeColor="@color/dark_blue" />
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCamera"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="60dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="Camera"
+                            app:icon="@android:drawable/ic_menu_camera"
+                            android:textAllCaps="false"
+                            android:textColor="@color/dark_blue"
+                            app:cornerRadius="16dp"
+                            app:strokeColor="@color/dark_blue" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnGallery"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="Gallery"
+                            app:icon="@android:drawable/ic_menu_gallery"
+                            android:textAllCaps="false"
+                            android:textColor="@color/dark_blue"
+                            app:cornerRadius="16dp"
+                            app:strokeColor="@color/dark_blue" />
+                    </LinearLayout>
 
                     <!-- Continue Button -->
                     <com.google.android.material.button.MaterialButton

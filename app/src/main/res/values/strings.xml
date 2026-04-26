@@ -3,4 +3,22 @@
     <string name="review_location_format">Block %1$s, Floor %2$s, Room %3$s</string>
     <string name="ticket_room_format">Room: %1$s</string>
     <string name="ticket_assigned_format">Assigned to: %1$s</string>
+    <string name="welcome_user_format">Welcome, %1$s</string>
+    <string name="no_announcements">No Announcements</string>
+    <string name="check_back_later">Check back later for updates.</string>
+    <string name="desc_back">Back</string>
+    <string name="title_select_location">Select Location</string>
+    <string name="subtitle_location_step">Step 1: Choose Building and Floor</string>
+    <string name="label_building_hostel">Building/Hostel</string>
+    <string name="hint_select_building">Select Building</string>
+    <string name="label_floor">Floor</string>
+    <string name="hint_select_floor">Select Floor</string>
+    <string name="label_room_number">Room Number</string>
+    <string name="hint_enter_room_no">Enter Room No.</string>
+    <string name="btn_continue">Continue</string>
+    <string name="recent_updates">Recent Updates</string>
+    <string name="no_recent_updates">No recent updates</string>
+    <string name="logout">Logout</string>
+    <string name="welcome_user_placeholder">Welcome, User</string>
+    <string name="recent_updates_label">Recent\nUpdates</string>
 </resources>
