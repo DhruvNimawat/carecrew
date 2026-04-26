@@ -3,4 +3,56 @@
     <string name="review_location_format">Block %1$s, Floor %2$s, Room %3$s</string>
     <string name="ticket_room_format">Room: %1$s</string>
     <string name="ticket_assigned_format">Assigned to: %1$s</string>
+
+    <!-- Location Selection -->
+    <string name="title_select_location">Select Location</string>
+    <string name="subtitle_location_step">Step 3: Where is the issue?</string>
+    <string name="label_building_hostel">Building / Hostel</string>
+    <string name="hint_select_building">Select Building</string>
+    <string name="label_floor">Floor</string>
+    <string name="hint_select_floor">Select Floor</string>
+    <string name="label_room_number">Room Number</string>
+    <string name="hint_enter_room_no">Enter Room No.</string>
+    <string name="btn_continue">Continue</string>
+    <string name="desc_back">Back</string>
+
+    <string-array name="buildings_array">
+        <item>GA building</item>
+        <item>GB building</item>
+        <item>NB building</item>
+        <item>Bhagat singh hostel</item>
+        <item>Vikram sarabai Hostel</item>
+        <item>Ratan Tata hostel</item>
+        <item>Apj abdul kalam hostel</item>
+        <item>Kalpana Chawla hostel</item>
+        <item>Gargi hostel</item>
+        <item>Workshop</item>
+    </string-array>
+
+    <string-array name="floors_array">
+        <item>Ground Floor</item>
+        <item>1st Floor</item>
+        <item>2nd Floor</item>
+        <item>3rd Floor</item>
+        <item>4th Floor</item>
+    </string-array>
+    <string name="title_raise_ticket">Raise Ticket</string>
+    <string name="subtitle_raise_ticket">Fill in the details of the issue</string>
+    <string name="label_title">Title</string>
+    <string name="hint_title">Brief title</string>
+    <string name="label_category">Category</string>
+    <string name="label_description">Description</string>
+    <string name="hint_description">Describe the issue</string>
+    <string name="label_priority">Priority</string>
+    <string name="priority_low">Low</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_high">High</string>
+    <string name="btn_submit_ticket">Submit Ticket</string>
+    <string name="label_review_prefix">Review: </string>
+    <string name="no_comments">No comments.</string>
+    <string name="welcome_user_format">Welcome, %1$s</string>
+    <string name="title_upload_evidence">Upload Evidence</string>
+    <string name="subtitle_upload_step">Step 2: Add Photos</string>
+    <string name="desc_upload_instruction">Take a photo or select from gallery\nto help us understand the issue better.</string>
+    <string name="btn_select_image">Select Image</string>
 </resources>

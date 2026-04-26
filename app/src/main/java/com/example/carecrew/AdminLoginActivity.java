@@ -2,7 +2,6 @@ package com.example.carecrew;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -16,8 +15,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
-
-import java.util.HashMap;
 
 public class AdminLoginActivity extends AppCompatActivity {
 
@@ -77,7 +74,8 @@ public class AdminLoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 Toast.makeText(this, "Admin Login Successful!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(AdminLoginActivity.this, AdminDashboard.class));
+                                Intent intent = new Intent(AdminLoginActivity.this, AdminDashboard.class);
+                                startActivity(intent);
                                 finish();
                             } else {
                                 Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();

@@ -26,13 +26,13 @@ public class LocationSelectionActivity extends AppCompatActivity {
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         // Setup Block Dropdown
-        String[] blocks = {"Block A", "Block B", "Block C", "Block D"};
+        String[] blocks = getResources().getStringArray(R.array.buildings_array);
         blockDropdown = findViewById(R.id.blockDropdown);
         ArrayAdapter<String> blockAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, blocks);
         blockDropdown.setAdapter(blockAdapter);
 
         // Setup Floor Dropdown
-        String[] floors = {"Ground Floor", "1st Floor", "2nd Floor", "3rd Floor"};
+        String[] floors = getResources().getStringArray(R.array.floors_array);
         floorDropdown = findViewById(R.id.floorDropdown);
         ArrayAdapter<String> floorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, floors);
         floorDropdown.setAdapter(floorAdapter);
