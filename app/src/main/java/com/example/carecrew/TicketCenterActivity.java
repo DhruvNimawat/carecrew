@@ -1,5 +1,6 @@
 package com.example.carecrew;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -43,7 +44,22 @@ public class TicketCenterActivity extends AppCompatActivity {
         rvTickets = findViewById(R.id.rvTickets);
 
         rvTickets.setLayoutManager(new LinearLayoutManager(this));
-        ticketAdapter = new TicketAdapter(allTicketsList);
+        ticketAdapter = new TicketAdapter(allTicketsList, complaint -> {
+            Intent intent = new Intent(TicketCenterActivity.this, ComplaintDetailsActivity.class);
+            intent.putExtra("id", complaint.id);
+            intent.putExtra("category", complaint.category);
+            intent.putExtra("status", complaint.status);
+            intent.putExtra("description", complaint.description);
+            intent.putExtra("block", complaint.block);
+            intent.putExtra("floor", complaint.floor);
+            intent.putExtra("roomNumber", complaint.roomNumber);
+            intent.putExtra("priority", complaint.priority);
+            intent.putExtra("timestamp", complaint.timestamp);
+            intent.putExtra("assignedTo", complaint.assignedTo);
+            intent.putExtra("rating", complaint.rating);
+            intent.putExtra("review", complaint.review);
+            startActivity(intent);
+        });
         rvTickets.setAdapter(ticketAdapter);
 
         ImageButton btnBack = findViewById(R.id.btnBack);

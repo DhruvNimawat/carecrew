@@ -3,6 +3,7 @@ package com.example.carecrew;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,9 +39,18 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         Complaint ticket = ticketList.get(position);
         holder.category.setText(ticket.category);
         holder.status.setText(ticket.status);
-        holder.location.setText(holder.itemView.getContext().getString(R.string.ticket_room_format, ticket.roomNumber));
+        String locationText = ticket.block + ", " + ticket.floor + " (Room " + ticket.roomNumber + ")";
+        holder.location.setText(locationText);
         holder.description.setText(ticket.description);
-        holder.assigned.setText(holder.itemView.getContext().getString(R.string.ticket_assigned_format, "Not Assigned"));
+        holder.assigned.setText(holder.itemView.getContext().getString(R.string.ticket_assigned_format,
+                ticket.assignedTo != null ? ticket.assignedTo : "Not Assigned"));
+
+        if (ticket.rating > 0) {
+            holder.ratingBar.setVisibility(View.VISIBLE);
+            holder.ratingBar.setRating(ticket.rating);
+        } else {
+            holder.ratingBar.setVisibility(View.GONE);
+        }
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -72,6 +82,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
     public static class TicketViewHolder extends RecyclerView.ViewHolder {
         TextView category, status, location, description, assigned;
+        RatingBar ratingBar;
 
         public TicketViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,6 +91,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             location = itemView.findViewById(R.id.ticketLocation);
             description = itemView.findViewById(R.id.ticketDescription);
             assigned = itemView.findViewById(R.id.ticketAssigned);
+            ratingBar = itemView.findViewById(R.id.ticketRating);
         }
     }
 }

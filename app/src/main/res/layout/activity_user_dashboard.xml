@@ -13,7 +13,7 @@
         android:id="@+id/headerBackground"
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:background="@color/dark_blue"
+        android:background="@color/primary_blue"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- CareCrew Tag -->
