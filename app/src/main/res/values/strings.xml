@@ -21,4 +21,17 @@
     <string name="logout">Logout</string>
     <string name="welcome_user_placeholder">Welcome, User</string>
     <string name="recent_updates_label">Recent\nUpdates</string>
+    <string name="user_id_format">ID: %1$s</string>
+    <string name="email_format">Email: %1$s</string>
+    <string name="name_format">Name: %1$s</string>
+    <string name="label_live">Live</string>
+    <string name="label_total_users">Total Users</string>
+    <string name="label_open_tickets">Open Tickets</string>
+    <string name="label_active_staff">Active Staff</string>
+    <string name="label_system_alerts">System Alerts</string>
+    <string name="label_add_staff">Add Staff</string>
+    <string name="label_tickets_center">Tickets Center</string>
+    <string name="label_staff_reviews">Staff Reviews</string>
+    <string name="label_announcements">Announcements</string>
+    <string name="subtitle_admin_dashboard">Building a better campus together.</string>
 </resources>
