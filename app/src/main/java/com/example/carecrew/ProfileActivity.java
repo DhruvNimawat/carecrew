@@ -18,14 +18,18 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView tvProfileName, tvProfileRole, tvDetailEmail;
-    private android.view.View navHome, navRaise, navTickets, navProfile;
+    private android.view.View btnBack;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+
+    private String userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        userRole = getIntent().getStringExtra("role");
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -33,14 +37,9 @@ public class ProfileActivity extends AppCompatActivity {
         tvProfileName = findViewById(R.id.tvProfileName);
         tvProfileRole = findViewById(R.id.tvProfileRole);
         tvDetailEmail = findViewById(R.id.tvDetailEmail);
+        btnBack = findViewById(R.id.btnBack);
 
-        // Bottom Nav
-        navHome = findViewById(R.id.navHome);
-        navRaise = findViewById(R.id.navRaise);
-        navTickets = findViewById(R.id.navTickets);
-        navProfile = findViewById(R.id.navProfile);
-
-        setupBottomNav();
+        btnBack.setOnClickListener(v -> finish());
         fetchUserData();
 
         findViewById(R.id.btnProfileLogout).setOnClickListener(v -> logout());
@@ -73,34 +72,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void setupBottomNav() {
-        navHome.setOnClickListener(v -> {
-            // Determine which dashboard to go back to
-            String email = mAuth.getCurrentUser().getEmail();
-            String emailKey = email != null ? email.replace(".", ",") : "";
-            mDatabase.child("Users").child(emailKey).child("role").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String role = snapshot.getValue(String.class);
-                    Intent intent = null;
-                    if ("Admin".equalsIgnoreCase(role)) intent = new Intent(ProfileActivity.this, AdminDashboard.class);
-                    else {
-                        Toast.makeText(ProfileActivity.this, role + " Dashboard coming soon!", Toast.LENGTH_SHORT).show();
-                    }
-                    
-                    if (intent != null) {
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
-            });
-        });
-
-        // Other tabs can be implemented similarly
-    }
 
     private void logout() {
         mAuth.signOut();

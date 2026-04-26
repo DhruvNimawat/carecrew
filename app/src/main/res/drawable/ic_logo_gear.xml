@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Outer Gear Shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,15 L56,15 L59,25 L65,27 L73,19 L78,24 L70,32 L72,38 L82,41 L82,47 L72,50 L70,56 L78,64 L73,69 L65,61 L59,63 L56,73 L50,73 L47,63 L41,61 L33,69 L28,64 L36,56 L34,50 L24,47 L24,41 L34,38 L36,32 L28,24 L33,19 L41,27 L47,25 Z"
+        android:strokeColor="#1E88E5"
+        android:strokeWidth="2"/>
+    <!-- Inner Circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,35 A15,15 0 1,1 50,65 A15,15 0 1,1 50,35"
+        android:strokeColor="#1E88E5"
+        android:strokeWidth="2"/>
+    <!-- Center Dot (Green) -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M50,45 A5,5 0 1,1 50,55 A5,5 0 1,1 50,45"/>
+</vector>
