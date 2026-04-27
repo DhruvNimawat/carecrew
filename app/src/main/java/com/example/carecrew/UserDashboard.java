@@ -85,11 +85,8 @@ public class UserDashboard extends AppCompatActivity {
         findViewById(R.id.cardUpdates).setOnClickListener(v -> 
             startActivity(new Intent(this, RecentUpdatesActivity.class)));
 
-        findViewById(R.id.cardProfile).setOnClickListener(v -> {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("role", "User");
-            startActivity(intent);
-        });
+        findViewById(R.id.cardAllTickets).setOnClickListener(v -> 
+            startActivity(new Intent(this, AllTicketsActivity.class)));
     }
 
     private void setupDrawer() {
@@ -215,7 +212,7 @@ public class UserDashboard extends AppCompatActivity {
                         String priority = ticket.priority != null ? ticket.priority : "";
 
                         if (status.equalsIgnoreCase("Pending") || status.equalsIgnoreCase("Open")) pending++;
-                        else if (status.equalsIgnoreCase("In Progress") || status.equalsIgnoreCase("Assigned")) inProgress++;
+                        else if (status.equalsIgnoreCase("In Progress") || status.equalsIgnoreCase("Assigned") || status.equalsIgnoreCase("Started")) inProgress++;
 
                         if (priority.equalsIgnoreCase("Urgent") || priority.equalsIgnoreCase("High")) urgent++;
                     }

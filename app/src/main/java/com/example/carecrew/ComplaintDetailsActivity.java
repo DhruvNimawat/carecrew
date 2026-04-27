@@ -6,11 +6,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
@@ -47,6 +48,8 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
         String assignedTo = getIntent().getStringExtra("assignedTo");
 
         String timestamp = "N/A";
+        String userId = getIntent().getStringExtra("userId");
+        String complaintId = getIntent().getStringExtra("id");
         if (timestampStr != null && !timestampStr.isEmpty()) {
             try {
                 long timestampLong = Long.parseLong(timestampStr);
@@ -66,20 +69,37 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.detailAssigned)).setText(assignedTo != null && !assignedTo.isEmpty() ? assignedTo : "Not Assigned");
         ((TextView) findViewById(R.id.detailTimestamp)).setText(timestamp);
 
-        // Check if admin is logged in
-        String currentUserEmail = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        View btnViewStaff = findViewById(R.id.btnViewStaffDetails);
+        if (assignedTo != null && !assignedTo.isEmpty()) {
+            btnViewStaff.setVisibility(View.VISIBLE);
+            btnViewStaff.setOnClickListener(v -> showStaffDetailsDialog(assignedTo));
+        }
+
+        // Check user role for Join button
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String currentUserEmail = user != null ? user.getEmail() : null;
+
         if (currentUserEmail != null) {
             String emailKey = currentUserEmail.replace(".", ",");
-            FirebaseDatabase.getInstance().getReference().child("Users").child(emailKey).child("role")
+            FirebaseDatabase.getInstance().getReference().child("Users").child(emailKey)
                     .addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
-                            String role = snapshot.getValue(String.class);
-                            if ("Admin".equalsIgnoreCase(role)) {
+                            String role = snapshot.child("role").getValue(String.class);
+                            if ("User".equalsIgnoreCase(role)) {
+                                // If it's a student, and NOT their own ticket, show "Join" button
+                                if (userId != null && !userId.equals(emailKey)) {
+                                    View btnJoin = findViewById(R.id.btnJoinComplaint);
+                                    if (btnJoin != null && "Pending".equalsIgnoreCase(status)) {
+                                        btnJoin.setVisibility(View.VISIBLE);
+                                        btnJoin.setOnClickListener(v -> joinComplaint(complaintId, emailKey));
+                                    }
+                                }
+                            } else if ("Admin".equalsIgnoreCase(role)) {
                                 View btnAllocate = findViewById(R.id.btnAllocateStaff);
                                 if (btnAllocate != null) {
                                     btnAllocate.setVisibility(View.VISIBLE);
-                                    btnAllocate.setOnClickListener(v -> showAllocationDialog(getIntent().getStringExtra("id")));
+                                    btnAllocate.setOnClickListener(v -> showAllocationDialog(complaintId));
                                 }
                             }
                         }
@@ -96,6 +116,19 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
         } else {
             btnReview.setVisibility(View.GONE);
         }
+    }
+
+    private void joinComplaint(String complaintId, String userEmailKey) {
+        if (complaintId == null) return;
+        DatabaseReference joinedRef = FirebaseDatabase.getInstance().getReference()
+                .child("complaints").child(complaintId).child("joinedUsers");
+        
+        joinedRef.child(userEmailKey).setValue(true).addOnSuccessListener(aVoid -> {
+            Toast.makeText(this, "You have joined this complaint!", Toast.LENGTH_SHORT).show();
+            findViewById(R.id.btnJoinComplaint).setVisibility(View.GONE);
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed to join complaint.", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void showReviewDialog(String complaintId, String assignedTo, String userId) {
@@ -183,8 +216,45 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.detailAssigned)).setText(staffEmail);
             ((TextView) findViewById(R.id.detailStatus)).setText("Assigned");
             findViewById(R.id.btnAllocateStaff).setVisibility(View.GONE);
+            findViewById(R.id.btnViewStaffDetails).setVisibility(View.VISIBLE);
         }).addOnFailureListener(e -> {
             Toast.makeText(this, "Allocation failed.", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void showStaffDetailsDialog(String staffEmail) {
+        if (staffEmail == null || staffEmail.isEmpty()) return;
+        
+        String emailKey = staffEmail.replace(".", ",");
+        FirebaseDatabase.getInstance().getReference().child("Users").child(emailKey)
+                .addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            String name = snapshot.child("name").getValue(String.class);
+                            String category = snapshot.child("category").getValue(String.class);
+                            String phone = snapshot.child("phone").getValue(String.class);
+                            
+                            StringBuilder sb = new StringBuilder();
+                            sb.append("Name: ").append(name != null ? name : "N/A").append("\n");
+                            sb.append("Category: ").append(category != null ? category : "N/A").append("\n");
+                            sb.append("Email: ").append(staffEmail).append("\n");
+                            if (phone != null && !phone.isEmpty()) {
+                                sb.append("Phone: ").append(phone);
+                            }
+                            
+                            new AlertDialog.Builder(ComplaintDetailsActivity.this)
+                                    .setTitle("Staff Information")
+                                    .setMessage(sb.toString())
+                                    .setPositiveButton("Close", null)
+                                    .show();
+                        } else {
+                            Toast.makeText(ComplaintDetailsActivity.this, "Staff details not found.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull com.google.firebase.database.DatabaseError error) {}
+                });
     }
 }

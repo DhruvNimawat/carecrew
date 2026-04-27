@@ -200,6 +200,26 @@
                         android:textSize="14sp" />
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewStaffDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="See Staff"
+                        android:visibility="gone"
+                        app:cornerRadius="12dp"
+                        android:backgroundTint="#2196F3"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnJoinComplaint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Join this Complaint"
+                        android:visibility="gone"
+                        app:cornerRadius="12dp"
+                        android:backgroundTint="#4CAF50"/>
+
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSubmitReviewDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

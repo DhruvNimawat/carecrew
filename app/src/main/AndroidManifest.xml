@@ -15,6 +15,9 @@
         android:theme="@style/Theme.CareCrew">
 
         <activity
+            android:name=".AllTicketsActivity"
+            android:exported="false" />
+        <activity
             android:name=".RecentUpdatesActivity"
             android:exported="false" />
         <activity

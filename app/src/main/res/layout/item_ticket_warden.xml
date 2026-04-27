@@ -40,11 +40,15 @@
         android:id="@+id/tvStaff"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="1.2"
         android:gravity="center"
-        android:text="Suresh"
-        android:textColor="#334155"
-        android:textSize="12sp" />
+        android:text="See Staff"
+        android:textColor="#2563EB"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground" />
 
     <TextView
         android:id="@+id/tvStatus"
