@@ -468,10 +468,53 @@ public class WardenDashboard extends AppCompatActivity {
 
             holder.tvCategory.setText(c.category);
             holder.tvRoom.setText(c.roomNumber);
-            holder.tvStaff.setText(c.assignedTo != null ? c.assignedTo : "None");
+            
+            // "See Staff" logic
+            holder.tvStaff.setOnClickListener(v -> {
+                if (c.assignedTo == null || c.assignedTo.trim().isEmpty() || c.assignedTo.equalsIgnoreCase("None")) {
+                    Toast.makeText(v.getContext(), "See staff will be allocated soon", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Show staff details dialog
+                    showStaffDetailsDialog(v.getContext(), c.assignedTo);
+                }
+            });
+
             holder.tvStatus.setText(c.status);
             
             holder.itemView.setOnClickListener(v -> listener.onItemClick(c));
+        }
+
+        private void showStaffDetailsDialog(android.content.Context context, String staffEmail) {
+            String emailKey = staffEmail.replace(".", ",");
+            FirebaseDatabase.getInstance().getReference().child("Users").child(emailKey)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            String name = snapshot.child("name").getValue(String.class);
+                            String category = snapshot.child("category").getValue(String.class);
+                            String phone = snapshot.child("phone").getValue(String.class);
+
+                            StringBuilder details = new StringBuilder();
+                            details.append("Name: ").append(name != null ? name : "N/A").append("\n");
+                            details.append("Category: ").append(category != null ? category : "N/A").append("\n");
+                            details.append("Phone: ").append(phone != null ? phone : "N/A");
+
+                            new androidx.appcompat.app.AlertDialog.Builder(context)
+                                .setTitle("Staff Details")
+                                .setMessage(details.toString())
+                                .setPositiveButton("OK", null)
+                                .show();
+                        } else {
+                            Toast.makeText(context, "Staff details not found", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
         }
 
         @Override

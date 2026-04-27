@@ -39,7 +39,7 @@ public class TicketCenterActivity extends AppCompatActivity {
     private List<Complaint> fullTicketList;
     private AutoCompleteTextView etSearch;
     private LinearLayout layoutOtherOptions;
-    private TextView tvRecentTicketsHeader, tvSubtitle;
+    private TextView tvRecentTicketsHeader, tvSubtitle, tvHeaderTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,8 @@ public class TicketCenterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticket_center);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("complaints");
+
+        tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
 
         // Initialize Views
         tvCountUnassigned = findViewById(R.id.tvCountUnassigned);
@@ -59,12 +61,15 @@ public class TicketCenterActivity extends AppCompatActivity {
         tvRecentTicketsHeader = findViewById(R.id.tvRecentTicketsHeader);
         tvSubtitle = findViewById(R.id.tvSubtitle);
 
+        if (layoutOtherOptions != null) layoutOtherOptions.setVisibility(View.VISIBLE);
+
         // Setup RecyclerView
         ticketList = new ArrayList<>();
         fullTicketList = new ArrayList<>();
         ticketAdapter = new TicketAdapter(ticketList, complaint -> {
             Intent intent = new Intent(TicketCenterActivity.this, ComplaintDetailsActivity.class);
             intent.putExtra("id", complaint.id);
+            intent.putExtra("userId", complaint.userId);
             intent.putExtra("category", complaint.category);
             intent.putExtra("status", complaint.status);
             intent.putExtra("description", complaint.description);
@@ -80,23 +85,7 @@ public class TicketCenterActivity extends AppCompatActivity {
         rvRecentTickets.setAdapter(ticketAdapter);
 
         ImageButton btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> {
-            if (layoutOtherOptions.getVisibility() == View.GONE) {
-                // If a filter is applied (status cards or search), go back to "Recent Tickets" view
-                etSearch.setText("");
-                layoutOtherOptions.setVisibility(View.VISIBLE);
-                tvRecentTicketsHeader.setVisibility(View.VISIBLE);
-                tvRecentTicketsHeader.setText("Recent Tickets");
-                if (tvSubtitle != null) tvSubtitle.setVisibility(View.VISIBLE);
-                
-                ticketList.clear();
-                ticketList.addAll(fullTicketList);
-                ticketAdapter.notifyDataSetChanged();
-            } else {
-                // If already on the main view, finish activity
-                finish();
-            }
-        });
+        btnBack.setOnClickListener(v -> finish());
 
         setupCardListeners();
         setupRealtimeCountersAndList();
@@ -123,16 +112,14 @@ public class TicketCenterActivity extends AppCompatActivity {
         List<String> suggestions = new ArrayList<>();
         
         if (text == null || text.trim().isEmpty()) {
-            layoutOtherOptions.setVisibility(View.VISIBLE);
-            tvRecentTicketsHeader.setVisibility(View.VISIBLE);
             tvRecentTicketsHeader.setText("Recent Tickets");
+            if (layoutOtherOptions != null) layoutOtherOptions.setVisibility(View.VISIBLE);
             if (tvSubtitle != null) tvSubtitle.setVisibility(View.VISIBLE);
             filteredList.addAll(fullTicketList);
         } else {
-            layoutOtherOptions.setVisibility(View.GONE);
-            tvRecentTicketsHeader.setVisibility(View.GONE);
+            tvRecentTicketsHeader.setText("Search Results");
+            if (layoutOtherOptions != null) layoutOtherOptions.setVisibility(View.GONE);
             if (tvSubtitle != null) tvSubtitle.setVisibility(View.GONE);
-            
             String query = text.toLowerCase().trim();
             for (Complaint item : fullTicketList) {
                 boolean matches = false;

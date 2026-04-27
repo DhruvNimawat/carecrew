@@ -132,6 +132,7 @@
                 android:id="@+id/layoutOtherOptions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <!-- Stats Horizontal Scroll -->
@@ -317,7 +318,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Tickets that have exceeded the 24h resolution window require immediate attention."
+                        android:text="Tickets that are not assigned and active for more than 48 hours."
                         android:textColor="#64748B"
                         android:textSize="13sp" />
 
@@ -357,25 +358,6 @@
                 android:columnCount="2">
 
                 <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    android:backgroundTint="#F8FAFC"
-                    android:text="Monthly\nAnalytics"
-                    android:textAllCaps="false"
-                    android:textColor="#334155"
-                    app:cornerRadius="20dp"
-                    app:icon="@drawable/ic_report"
-                    app:iconGravity="top"
-                    app:iconPadding="8dp"
-                    app:iconSize="24dp"
-                    app:iconTint="#1976D2"
-                    app:strokeColor="#E2E8F0"
-                    app:strokeWidth="1dp" />
-
-                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnStaffAllocation"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="0dp"
@@ -394,6 +376,12 @@
                     app:iconTint="#9C27B0"
                     app:strokeColor="#E2E8F0"
                     app:strokeWidth="1dp" />
+
+                <!-- Empty space for grid alignment if needed, or just leave it with one button -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1" />
 
             </GridLayout>
 
