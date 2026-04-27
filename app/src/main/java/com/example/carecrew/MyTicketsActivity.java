@@ -14,8 +14,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 import androidx.appcompat.app.AlertDialog;
 import android.view.View;
@@ -175,9 +176,13 @@ public class MyTicketsActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Complaint ticket = postSnapshot.getValue(Complaint.class);
                     if (ticket != null && currentUserId.equals(ticket.userId)) {
+                        ticket.id = postSnapshot.getKey(); // Ensure ID is set
                         allTickets.add(ticket);
                     }
                 }
+                // Sort tickets: newest first (descending order of timestamp)
+                Collections.sort(allTickets, (t1, t2) -> Long.compare(t2.getTimestampLong(), t1.getTimestampLong()));
+
                 ticketAdapter.updateList(allTickets);
             }
 
