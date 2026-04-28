@@ -1,5 +1,6 @@
 package com.example.carecrew;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -43,11 +44,37 @@ public class RecentUpdatesActivity extends AppCompatActivity {
         }
 
         updateList = new ArrayList<>();
-        adapter = new UpdateAdapter(updateList);
+        adapter = new UpdateAdapter(updateList, this::onUpdateClicked);
         rvRecentUpdates.setLayoutManager(new LinearLayoutManager(this));
         rvRecentUpdates.setAdapter(adapter);
 
         fetchUpdates();
+    }
+
+    private void onUpdateClicked(Complaint complaint) {
+        Intent intent = new Intent(this, ComplaintDetailsActivity.class);
+        intent.putExtra("id", complaint.id);
+        intent.putExtra("category", complaint.category);
+        intent.putExtra("status", complaint.status);
+        intent.putExtra("description", complaint.description);
+        intent.putExtra("block", complaint.block);
+        intent.putExtra("floor", complaint.floor);
+        intent.putExtra("roomNumber", complaint.roomNumber);
+        intent.putExtra("priority", complaint.priority);
+        intent.putExtra("assignedTo", complaint.assignedTo);
+        intent.putExtra("userId", complaint.userId);
+        intent.putExtra("afterRepairImageUrl", complaint.afterRepairImageUrl);
+        intent.putExtra("startWorkImageUrl", complaint.startWorkImageUrl);
+        intent.putExtra("imageUrl", complaint.imageUrl);
+
+        // Pass timestamp as string
+        String ts = "N/A";
+        if (complaint.timestamp != null) {
+            ts = complaint.timestamp.toString();
+        }
+        intent.putExtra("timestamp", ts);
+
+        startActivity(intent);
     }
 
     private void fetchUpdates() {
@@ -62,6 +89,7 @@ public class RecentUpdatesActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Complaint complaint = postSnapshot.getValue(Complaint.class);
                     if (complaint != null && userId.equals(complaint.userId)) {
+                        complaint.id = postSnapshot.getKey();
                         updateList.add(complaint);
                     }
                 }

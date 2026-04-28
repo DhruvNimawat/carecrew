@@ -9,11 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.android.material.textfield.TextInputEditText;
+import android.widget.ImageView;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +28,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ComplaintDetailsActivity extends AppCompatActivity {
+
+    private String complaintId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,21 +53,26 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
         String priority = getIntent().getStringExtra("priority");
         String timestampStr = getIntent().getStringExtra("timestamp");
         String assignedTo = getIntent().getStringExtra("assignedTo");
+        complaintId = getIntent().getStringExtra("id");
 
+        // ... rest of setup ...
+        setupViews(category, status, description, block, floor, room, priority, timestampStr, assignedTo);
+        loadWorkPhotos();
+        checkUserRoleAndStatus(complaintId, status, assignedTo);
+    }
+
+    private void setupViews(String category, String status, String description, String block, String floor, String room, String priority, String timestampStr, String assignedTo) {
         String timestamp = "N/A";
-        String userId = getIntent().getStringExtra("userId");
-        String complaintId = getIntent().getStringExtra("id");
         if (timestampStr != null && !timestampStr.isEmpty()) {
             try {
                 long timestampLong = Long.parseLong(timestampStr);
                 SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
                 timestamp = sdf.format(new Date(timestampLong));
             } catch (NumberFormatException e) {
-                timestamp = timestampStr; // If it's already a formatted string
+                timestamp = timestampStr;
             }
         }
 
-        // Set data to views
         ((TextView) findViewById(R.id.detailCategory)).setText(category);
         ((TextView) findViewById(R.id.detailStatus)).setText(status);
         ((TextView) findViewById(R.id.detailDescription)).setText(description);
@@ -74,20 +86,111 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
             btnViewStaff.setVisibility(View.VISIBLE);
             btnViewStaff.setOnClickListener(v -> showStaffDetailsDialog(assignedTo));
         }
+    }
 
-        // Check user role for Join button
+    private void loadWorkPhotos() {
+        if (complaintId == null) return;
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("complaints").child(complaintId);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Complaint complaint = snapshot.getValue(Complaint.class);
+                if (complaint != null) {
+                    // Update status in case it changed while viewing
+                    TextView tvStatus = findViewById(R.id.detailStatus);
+                    if (tvStatus != null) {
+                        tvStatus.setText(complaint.status);
+                    }
+
+                    View layoutWorkPhotos = findViewById(R.id.layoutWorkPhotos);
+                    ImageView ivBefore = findViewById(R.id.ivBeforeDetail);
+                    ImageView ivAfter = findViewById(R.id.ivAfterDetail);
+                    View layoutBefore = findViewById(R.id.layoutBeforePhoto);
+                    View layoutAfter = findViewById(R.id.layoutAfterPhoto);
+
+                    boolean hasPhotos = false;
+                    boolean isVisibleStatus = "Started".equalsIgnoreCase(complaint.status) 
+                            || "In Progress".equalsIgnoreCase(complaint.status) 
+                            || "Completed".equalsIgnoreCase(complaint.status) 
+                            || "Resolved".equalsIgnoreCase(complaint.status);
+
+                    // Before Photo Logic: Prioritize Staff's 'Before' image, fallback to User's image
+                    if (complaint.startWorkImageUrl != null && !complaint.startWorkImageUrl.isEmpty()) {
+                        layoutBefore.setVisibility(View.VISIBLE);
+                        Glide.with(ComplaintDetailsActivity.this).load(complaint.startWorkImageUrl).into(ivBefore);
+                        hasPhotos = true;
+                        ivBefore.setOnClickListener(v -> showImageDialog(complaint.startWorkImageUrl, "Before Repair (Staff Capture)"));
+                    } else if (complaint.imageUrl != null && !complaint.imageUrl.isEmpty()) {
+                        layoutBefore.setVisibility(View.VISIBLE);
+                        Glide.with(ComplaintDetailsActivity.this).load(complaint.imageUrl).into(ivBefore);
+                        hasPhotos = true;
+                        ivBefore.setOnClickListener(v -> showImageDialog(complaint.imageUrl, "Before Repair (User Capture)"));
+                    } else {
+                        layoutBefore.setVisibility(View.GONE);
+                    }
+
+                    // After Photo Logic
+                    if (complaint.afterRepairImageUrl != null && !complaint.afterRepairImageUrl.isEmpty()) {
+                        layoutAfter.setVisibility(View.VISIBLE);
+                        Glide.with(ComplaintDetailsActivity.this).load(complaint.afterRepairImageUrl).into(ivAfter);
+                        hasPhotos = true;
+                        ivAfter.setOnClickListener(v -> showImageDialog(complaint.afterRepairImageUrl, "After Repair"));
+                    } else {
+                        layoutAfter.setVisibility(View.GONE);
+                    }
+
+                    // Visibility Logic: Show section if photos exist OR if status implies work has started/finished
+                    if (hasPhotos || isVisibleStatus) {
+                        layoutWorkPhotos.setVisibility(View.VISIBLE);
+                    } else {
+                        layoutWorkPhotos.setVisibility(View.GONE);
+                    }
+
+                    // Update review button visibility if status changed to Completed
+                    View btnReview = findViewById(R.id.btnSubmitReviewDetails);
+                    if (btnReview != null) {
+                        if ("Completed".equalsIgnoreCase(complaint.status) || "Resolved".equalsIgnoreCase(complaint.status)) {
+                            btnReview.setVisibility(View.VISIBLE);
+                            // Ensure listener is set even if status changed in real-time
+                            btnReview.setOnClickListener(v -> showReviewDialog(complaint.id, complaint.assignedTo, complaint.userId));
+                        } else {
+                            btnReview.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private void showImageDialog(String imageUrl, String title) {
+        if (imageUrl == null || imageUrl.isEmpty()) return;
+        ImageView imageView = new ImageView(this);
+        imageView.setPadding(16, 16, 16, 16);
+        Glide.with(this).load(imageUrl).into(imageView);
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setView(imageView)
+                .setPositiveButton("Close", null)
+                .show();
+    }
+
+    private void checkUserRoleAndStatus(String complaintId, String status, String assignedTo) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserEmail = user != null ? user.getEmail() : null;
+        String userId = getIntent().getStringExtra("userId");
 
         if (currentUserEmail != null) {
             String emailKey = currentUserEmail.replace(".", ",");
             FirebaseDatabase.getInstance().getReference().child("Users").child(emailKey)
-                    .addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String role = snapshot.child("role").getValue(String.class);
                             if ("User".equalsIgnoreCase(role)) {
-                                // If it's a student, and NOT their own ticket, show "Join" button
                                 if (userId != null && !userId.equals(emailKey)) {
                                     View btnJoin = findViewById(R.id.btnJoinComplaint);
                                     if (btnJoin != null && "Pending".equalsIgnoreCase(status)) {
@@ -97,24 +200,25 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
                                 }
                             } else if ("Admin".equalsIgnoreCase(role)) {
                                 View btnAllocate = findViewById(R.id.btnAllocateStaff);
-                                if (btnAllocate != null) {
+                                if (btnAllocate != null && ("Pending".equalsIgnoreCase(status) || "Unassigned".equalsIgnoreCase(status))) {
                                     btnAllocate.setVisibility(View.VISIBLE);
                                     btnAllocate.setOnClickListener(v -> showAllocationDialog(complaintId));
                                 }
                             }
                         }
                         @Override
-                        public void onCancelled(@NonNull com.google.firebase.database.DatabaseError error) {}
+                        public void onCancelled(@NonNull DatabaseError error) {}
                     });
         }
 
-        // Handle Review Button for Completed tickets
         View btnReview = findViewById(R.id.btnSubmitReviewDetails);
         if ("Completed".equalsIgnoreCase(status) || "Resolved".equalsIgnoreCase(status)) {
             btnReview.setVisibility(View.VISIBLE);
-            btnReview.setOnClickListener(v -> showReviewDialog(getIntent().getStringExtra("id"), assignedTo, getIntent().getStringExtra("userId")));
+            btnReview.setOnClickListener(v -> showReviewDialog(complaintId, assignedTo, userId));
         } else {
             btnReview.setVisibility(View.GONE);
+            // Even if not visible now, we can pre-set the listener or let the real-time listener handle it
+            btnReview.setOnClickListener(v -> showReviewDialog(complaintId, assignedTo, userId));
         }
     }
 

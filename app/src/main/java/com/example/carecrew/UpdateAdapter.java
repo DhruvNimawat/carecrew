@@ -11,9 +11,15 @@ import java.util.List;
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateViewHolder> {
 
     private List<Complaint> updates;
+    private OnUpdateClickListener listener;
 
-    public UpdateAdapter(List<Complaint> updates) {
+    public interface OnUpdateClickListener {
+        void onUpdateClick(Complaint complaint);
+    }
+
+    public UpdateAdapter(List<Complaint> updates, OnUpdateClickListener listener) {
         this.updates = updates;
+        this.listener = listener;
     }
 
     @NonNull
@@ -40,6 +46,12 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
         if (holder.tvUpdateStatus.getBackground() != null) {
             holder.tvUpdateStatus.getBackground().mutate().setTint(color);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onUpdateClick(complaint);
+            }
+        });
     }
 
     @Override

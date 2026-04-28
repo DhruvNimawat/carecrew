@@ -36,13 +36,14 @@ public class JobUpdateStaffActivity extends AppCompatActivity {
 
     private String ticketId;
     private TextView tvTicketId, tvUserName, tvRoom, tvStatusBadge;
-    private android.widget.ImageView ivStartWorkPhoto;
-    private android.widget.LinearLayout layoutStartWorkPhoto;
+    private android.widget.ImageView ivStartWorkPhoto, ivAfterWorkPhoto;
+    private android.widget.LinearLayout layoutStartWorkPhoto, layoutAfterWorkPhoto;
     private TextView tvTimelineAccepted, tvTimelineStarted, tvTimelineInProgress, tvTimelineCompleted;
-    private View dotAccepted, dotStarted, dotInProgress, dotCompleted, notificationBanner;
-    private MaterialButton btnStartWork, btnMarkInProgress, btnComplete, btnCancel, btnBannerCamera;
+    private View dotAccepted, dotStarted, dotInProgress, dotCompleted;
+    private MaterialButton btnStartWork, btnMarkInProgress, btnComplete, btnCancel;
     private DatabaseReference mDatabase;
     private boolean isBeforePhotoCaptured = false;
+    private boolean isAfterPhotoCaptured = false;
     
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int CAMERA_PERMISSION_CODE = 101;
@@ -68,6 +69,8 @@ public class JobUpdateStaffActivity extends AppCompatActivity {
         tvStatusBadge = findViewById(R.id.tvStatusBadge);
         ivStartWorkPhoto = findViewById(R.id.ivStartWorkPhoto);
         layoutStartWorkPhoto = findViewById(R.id.layoutStartWorkPhoto);
+        ivAfterWorkPhoto = findViewById(R.id.ivAfterWorkPhoto);
+        layoutAfterWorkPhoto = findViewById(R.id.layoutAfterWorkPhoto);
 
         tvTimelineAccepted = findViewById(R.id.tvTimelineAccepted);
         tvTimelineStarted = findViewById(R.id.tvTimelineStarted);
@@ -83,8 +86,6 @@ public class JobUpdateStaffActivity extends AppCompatActivity {
         btnMarkInProgress = findViewById(R.id.btnMarkInProgress);
         btnComplete = findViewById(R.id.btnComplete);
         btnCancel = findViewById(R.id.btnCancel);
-        notificationBanner = findViewById(R.id.notificationBanner);
-        btnBannerCamera = findViewById(R.id.btnBannerCamera);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
@@ -111,6 +112,16 @@ public class JobUpdateStaffActivity extends AppCompatActivity {
                                 .into(ivStartWorkPhoto);
                     } else {
                         layoutStartWorkPhoto.setVisibility(View.GONE);
+                    }
+
+                    isAfterPhotoCaptured = (ticket.afterRepairImageUrl != null);
+                    if (isAfterPhotoCaptured) {
+                        layoutAfterWorkPhoto.setVisibility(View.VISIBLE);
+                        com.bumptech.glide.Glide.with(JobUpdateStaffActivity.this)
+                                .load(ticket.afterRepairImageUrl)
+                                .into(ivAfterWorkPhoto);
+                    } else {
+                        layoutAfterWorkPhoto.setVisibility(View.GONE);
                     }
                     
                     updateTimeline(ticket.status);
@@ -160,14 +171,9 @@ public class JobUpdateStaffActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnStartWork.setOnClickListener(v -> {
-            // Directly start work without image for now
             mDatabase.child("status").setValue("Started");
             updateButtonStyles("Started");
             Toast.makeText(this, "Work Started!", Toast.LENGTH_SHORT).show();
-        });
-
-        btnBannerCamera.setOnClickListener(v -> {
-            dispatchTakePictureIntent();
         });
 
         btnMarkInProgress.setOnClickListener(v -> {
@@ -176,7 +182,6 @@ public class JobUpdateStaffActivity extends AppCompatActivity {
         });
 
         btnComplete.setOnClickListener(v -> {
-            updateButtonStyles("Completed");
             Intent intent = new Intent(JobUpdateStaffActivity.this, JobCompletionActivity.class);
             intent.putExtra("ticketId", ticketId);
             startActivity(intent);
@@ -186,6 +191,87 @@ public class JobUpdateStaffActivity extends AppCompatActivity {
             Intent intent = new Intent(JobUpdateStaffActivity.this, CancelJobActivity.class);
             intent.putExtra("ticketId", ticketId);
             startActivity(intent);
+        });
+    }
+
+    private void dispatchTakePictureIntent() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+        } else {
+            openCamera(REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    private void openCamera(int requestCode) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Toast.makeText(this, "Error creating file", Toast.LENGTH_SHORT).show();
+            }
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "com.example.carecrew.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, requestCode);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera(REQUEST_IMAGE_CAPTURE);
+            } else {
+                Toast.makeText(this, "Camera permission is required to use this feature", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_before_";
+        File storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                uploadImageAndStartWork();
+            }
+        }
+    }
+
+    private void uploadImageAndStartWork() {
+        if (photoURI == null) return;
+        
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("work_images/" + ticketId + "_start.jpg");
+        
+        storageRef.putFile(photoURI).addOnSuccessListener(taskSnapshot -> {
+            // Get the URL from the snapshot's storage reference to be safe
+            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
+                mDatabase.child("startWorkImageUrl").setValue(uri.toString());
+                mDatabase.child("status").setValue("Started");
+                isBeforePhotoCaptured = true;
+                
+                updateButtonStyles("Started");
+
+                Toast.makeText(this, "Work Started!", Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Failed to get download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Image Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -228,85 +314,5 @@ public class JobUpdateStaffActivity extends AppCompatActivity {
         btnStartWork.setAlpha(btnStartWork.isEnabled() || isStarted ? 1.0f : 0.5f);
         btnMarkInProgress.setAlpha(btnMarkInProgress.isEnabled() || isInProgress ? 1.0f : 0.5f);
         btnComplete.setAlpha(btnComplete.isEnabled() || isCompleted ? 1.0f : 0.5f);
-    }
-
-    private void dispatchTakePictureIntent() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
-        } else {
-            openCamera();
-        }
-    }
-
-    private void openCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                Toast.makeText(this, "Error creating file", Toast.LENGTH_SHORT).show();
-            }
-            if (photoFile != null) {
-                photoURI = FileProvider.getUriForFile(this,
-                        "com.example.carecrew.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera();
-            } else {
-                Toast.makeText(this, "Camera permission is required to use this feature", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            uploadImageAndStartWork();
-        }
-    }
-
-    private void uploadImageAndStartWork() {
-        if (photoURI == null) return;
-        
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("work_images/" + ticketId + "_start.jpg");
-        
-        storageRef.putFile(photoURI).addOnSuccessListener(taskSnapshot -> {
-            // Get the URL from the snapshot's storage reference to be safe
-            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
-                mDatabase.child("startWorkImageUrl").setValue(uri.toString());
-                mDatabase.child("status").setValue("Started");
-                isBeforePhotoCaptured = true;
-                
-                updateButtonStyles("Started");
-                notificationBanner.setVisibility(View.GONE);
-
-                Toast.makeText(this, "Work Started!", Toast.LENGTH_SHORT).show();
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Failed to get download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            });
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Image Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
     }
 }

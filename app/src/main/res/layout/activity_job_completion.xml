@@ -86,9 +86,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardBefore"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
                 app:strokeColor="#E2E8F0"
                 app:strokeWidth="1dp">
@@ -98,8 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_search"
-                    app:tint="#2563EB" />
+                    android:src="@drawable/ic_search" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
@@ -124,34 +123,20 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAfter"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
                 app:strokeColor="#2563EB"
                 app:strokeWidth="1dp">
 
-                <FrameLayout
+                <ImageView
+                    android:id="@+id/ivAfter"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_search" />
 
-                    <ImageView
-                        android:id="@+id/ivAfter"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_search"
-                        app:tint="#2563EB" />
-
-                    <TextView
-                        android:id="@+id/tvAfterHint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Tap to add image"
-                        android:textColor="#94A3B8"
-                        android:textSize="12sp" />
-                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
@@ -164,7 +149,7 @@
         android:layout_height="56dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
-        android:text="Capture After"
+        android:text="Recapture After Photo"
         android:textAllCaps="false"
         android:textColor="#2563EB"
         android:textSize="16sp"
