@@ -90,7 +90,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             holder.status.setBackgroundResource(R.drawable.bg_status_completed_green);
         } else if ("Cancelled".equalsIgnoreCase(status)) {
             holder.status.setBackgroundResource(R.drawable.bg_status_cancelled_red);
-        } else if ("In Progress".equalsIgnoreCase(status)) {
+        } else if ("In Progress".equalsIgnoreCase(status) || "Started".equalsIgnoreCase(status)) {
             holder.status.setBackgroundResource(R.drawable.bg_status_inprogress_blue);
         } else if ("Pending".equalsIgnoreCase(status)) {
             holder.status.setBackgroundResource(R.drawable.bg_status_pending);

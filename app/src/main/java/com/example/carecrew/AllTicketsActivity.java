@@ -61,6 +61,9 @@ public class AllTicketsActivity extends AppCompatActivity {
             intent.putExtra("priority", complaint.priority);
             intent.putExtra("timestamp", complaint.getTimestampString());
             intent.putExtra("assignedTo", complaint.assignedTo);
+            intent.putExtra("afterRepairImageUrl", complaint.afterRepairImageUrl);
+            intent.putExtra("startWorkImageUrl", complaint.startWorkImageUrl);
+            intent.putExtra("imageUrl", complaint.imageUrl);
             startActivity(intent);
         });
         

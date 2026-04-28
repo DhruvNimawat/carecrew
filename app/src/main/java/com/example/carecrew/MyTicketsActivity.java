@@ -142,6 +142,9 @@ public class MyTicketsActivity extends AppCompatActivity {
         intent.putExtra("priority", complaint.priority);
         intent.putExtra("assignedTo", complaint.assignedTo);
         intent.putExtra("userId", complaint.userId);
+        intent.putExtra("afterRepairImageUrl", complaint.afterRepairImageUrl);
+        intent.putExtra("startWorkImageUrl", complaint.startWorkImageUrl);
+        intent.putExtra("imageUrl", complaint.imageUrl);
 
         // Pass timestamp as string
         String ts = "N/A";

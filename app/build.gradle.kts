@@ -42,9 +42,6 @@ dependencies {
     implementation(libs.recyclerview)
     implementation(libs.firebase.database)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.auth)
     implementation(libs.glide)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    implementation("com.google.firebase:firebase-auth:22.3.0")
 }
