@@ -1,49 +1,53 @@
-# 🏥 CareCrew
+# 📱 CareCrew
 
 <p align="center">
-  <img src="https://img.shields.io/github/repo-size/DhruvNimawat/carecrew?style=for-the-badge" alt="Repo Size" />
-  <img src="https://img.shields.io/github/contributors/DhruvNimawat/carecrew?color=blue&style=for-the-badge" alt="Contributors" />
-  <img src="https://img.shields.io/github/issues/DhruvNimawat/carecrew?color=red&style=for-the-badge" alt="Issues" />
-  <img src="https://img.shields.io/github/license/DhruvNimawat/carecrew?color=success&style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/github/repo-size/DhruvNimawat/carecrew?style=for-the-badge&color=7B2CBF" alt="Repo Size" />
+  <img src="https://img.shields.io/github/languages/top/DhruvNimawat/carecrew?style=for-the-badge&color=3A86FF" alt="Top Language" />
+  <img src="https://img.shields.io/github/issues/DhruvNimawat/carecrew?style=for-the-badge&color=E63946" alt="Issues" />
+  <img src="https://img.shields.io/github/license/DhruvNimawat/carecrew?style=for-the-badge&color=2A9D8F" alt="License" />
 </p>
 
 ---
 
 ## 🚀 About CareCrew
-**CareCrew** is an advanced digital healthcare ecosystem designed to streamline patient management, optimize clinical workflows, and bridge the communication gap between healthcare providers and patients. Built with a focus on speed, data integrity, and intuitive UI/UX, CareCrew ensures that modern medical teams can deliver high-quality care efficiently.
+*CareCrew* is an integrated maintenance and complaint management ecosystem developed natively for the Android platform. It digitizes and streamlines campus-level facility management by consolidating student grievances, staff responses, and administrative oversight into a single, transparent interface. 
 
-### ✨ Key Features
-*   **🩺 Smart Patient Triage:** Dynamic assessment pipelines to prioritize critical patient cases instantly.
-*   **📅 Intelligent Scheduling:** Advanced appointment management system with automated reminders to minimize no-shows.
-*   **🔒 Secure Medical Records (EHR):** Encrypted, access-controlled data storage for patient history and clinical notes.
-*   **📊 Analytics Dashboard:** Real-time data visualization providing actionable insights into hospital operations and patient trends.
-*   **💬 Crew Synergy:** Integrated communication channels for doctors, nurses, and administrative staff.
+By moving away from informal, untraceable communication channels like verbal reporting or unrecorded calls, CareCrew ensures every service request follows a strictly documented, auditable path from initiation to closure.
+
+### 🏗️ Codebase Statistics
+CareCrew is built with production-ready stability in mind, moving past a basic proof-of-concept into a comprehensive application framework consisting of:
+*   *39 Java Source Files:* Handling backend logic, complex state transitions, and asynchronous operations.
+*   *49 XML Layout Configurations:* Powering a fluid, responsive UI designed for a seamless user experience.
+*   *Custom UI Elements:* Packed with bespoke drawable assets and micro-animations to polish the end-to-end interface.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 🔒 Role-Based Access Control (RBAC) Architecture
+The system employs a strict RBAC model to ensure that workflows are highly specialized, isolated, and secure. The application dynamically adjusts its interface based on four primary user entry points:
 
-| Layer | Technologies |
+| Role | Primary Functions & Features |
 | :--- | :--- |
-| **Frontend** | React.js / Next.js, Tailwind CSS, Redux Toolkit |
-| **Backend** | Node.js, Express.js / Python Fast API |
-| **Database** | PostgreSQL / MongoDB, Redis (Caching) |
-| **DevOps & Cloud** | Docker, GitHub Actions (CI/CD), AWS S3 |
+| *👨‍🎓 Student (User)* | Digital submission of complaints, attaching precise location data, uploading photographic evidence, and tracking real-time status updates. |
+| *🛠️ Maintenance Personnel (Staff)* | Task-oriented work order dashboard, ticket filtering by category, and mandatory "before-and-after" visual verification for accountability prior to task closure. |
+| *🏢 Hostel Management (Warden)* | Specialized monitoring dashboard to oversee maintenance trends, response bottlenecks, and pending issues within specific residential blocks. |
+| *👑 System Administrator (Admin)* | Central authority for global user management, automated/manual workload distribution, and the dissemination of campus-wide announcements. |
 
 ---
 
-## 📦 Getting Started
+## 🛠️ Tech Stack & Requirements
 
-Follow these steps to set up CareCrew locally on your machine.
+*   *Platform:* Android (Native)
+*   *Language:* Java
+*   *UI/UX:* XML Layouts, Material Design Components, Custom Canvas Drawables & Animations
+*   *Minimum SDK:* Android 7.0 (API Level 24) or higher
 
-### Prerequisites
-*   Node.js (v18.0.0 or higher)
-*   Package Manager (npm or yarn)
-*   A running instance of your chosen database
+---
 
-### Installation & Local Setup
+## 📦 Getting Started & Installation
 
-1. **Clone your repository:**
-   ```bash
-   git clone [https://github.com/DhruvNimawat/carecrew.git](https://github.com/DhruvNimawat/carecrew.git)
-   cd carecrew
+To clone this repository and set up the project on your local machine using Android Studio:
+
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/DhruvNimawat/carecrew.git](https://github.com/DhruvNimawat/carecrew.git)
+cd carecrew
