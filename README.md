@@ -1,12 +1,5 @@
 # 📱 CareCrew
 
-<p align="center">
-  <img src="https://img.shields.io/github/repo-size/DhruvNimawat/carecrew?style=for-the-badge&color=7B2CBF" alt="Repo Size" />
-  <img src="https://img.shields.io/github/languages/top/DhruvNimawat/carecrew?style=for-the-badge&color=3A86FF" alt="Top Language" />
-  <img src="https://img.shields.io/github/issues/DhruvNimawat/carecrew?style=for-the-badge&color=E63946" alt="Issues" />
-  <img src="https://img.shields.io/github/license/DhruvNimawat/carecrew?style=for-the-badge&color=2A9D8F" alt="License" />
-</p>
-
 ---
 
 ## 🚀 About CareCrew
